@@ -1,7 +1,7 @@
 ---
 title: "Title Goes Here"
 author:
-  - Myfirstname Mylastname:
+  - Yichun Chen
       email: fl@oneplace.edu
       institute: [UofO]
       correspondence: true
