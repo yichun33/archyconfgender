@@ -1,15 +1,11 @@
 ---
 title: "Title Goes Here"
 author:
-  - Yichun Chen
+  - Yichun Chen:
       email: fl@oneplace.edu
       institute: [UofO]
       correspondence: true
-<<<<<<< HEAD
-  - Yourfirstname Marwick
-=======
-  - Ben Yourlastname:
->>>>>>> 0c52bebbe543d3df81f2fb0f5bd8d8930f607006
+  - Ben Marwick:
       email: fl@another.edu
       institute: [UofA]
       correspondence: false
