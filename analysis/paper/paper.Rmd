@@ -52,6 +52,9 @@ Here is a citation [@Marwick2017]
 
 # Background
 
+Gender underrepresentation and inequality has long existed, from underrepresentation in children’s picture books to academic publications (Hamilton et al. 2006; Tushingham et al. 2017). When talking about inequality in academic fields, we usually refer to the disproportionality between men and women in the field, including archaeology. Women are often underrepresented due to the lack of support women receive in academic fields (Xu 2008). When focusing on the field of archaeology, we can see that gender imbalance still occurs in archaeology and that seems to impact the kind of publications that are done in the field (Bardolph et al. 2016). As we can see in the authorship of the main authors from the Journal of Field Archaeology, 78% of them are men (Heath-Stout 2020). When looking at gender ratios among the membership in Society for California Archaeology from 1967 to 2016, Tushingham et al. (2017) report a trend of women increasingly maintaining their society membership and the gender gap is almost gone. In this study we investigate gender ratios of presenters at major archaeological conferences. We extend the work of Tushingham et al. (2017) with a study of gender ratios of presenters at meetings of the Society of American Archaeology (SAA, 2016-2019), the European Association of Archaeologists (EAA, 2018) and the Computer Applications and Quantitative Methods in Archaeology (CAA, 2017)  We explore how gender ratios vary over time and between these conferences. We examine the influence of the gender of the presenter on the topics that they present on.
+
+
 # Methods
 
 # Results

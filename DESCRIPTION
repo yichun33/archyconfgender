@@ -15,3 +15,5 @@ Imports: bookdown,
     here
 Suggests: devtools,
     git2r
+URL: https://github.com/yichun33/archyconfgender
+BugReports: https://github.com/yichun33/archyconfgender/issues
