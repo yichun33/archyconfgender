@@ -16,7 +16,8 @@ Title <- "Title of your paper goes here"
 
 # archyconfgender
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh///master?urlpath=rstudio)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/yichun33/archyconfgender/master?urlpath=rstudio)
+[![R build status](https://github.com/yichun33/archyconfgender/workflows/R-CMD-check/badge.svg)](https://github.com/yichun33/archyconfgender/actions)
 
 This repository contains the data and code for our paper:
 
