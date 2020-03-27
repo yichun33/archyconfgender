@@ -88,7 +88,7 @@ SAA18_top_term_plot
 
 ```{r}
 #SAA2018 Topic Model
-d <- readxl::read_excel("2018 SAA Title.xlsx")
+d <- readxl::read_excel(here::here("analysis/data/2018 SAA Title.xlsx"))
 
 library(tidyverse)
 library(tidytext)
@@ -96,7 +96,7 @@ library(tidytext)
 d_word <- d %>%
   unnest_tokens(word, AbstractTitle)
 
-write.table(d_word, "d.xlsx")
+write.table(d_word, here::here("analysis/data/d.xlsx"))
 
 word_counts <- d_word %>%
   anti_join(stop_words) %>%
@@ -108,8 +108,6 @@ word_counts <- d_word %>%
   unite(unique_id, SessionNumber, LastName, FirstName) %>%
   count(unique_id, word, sort = TRUE) %>%
   ungroup()
-
-word_counts
 
 unique_id_dtm <- word_counts %>%
   cast_dtm(unique_id, word, n)
@@ -130,19 +128,17 @@ unique_id_dtm <- word_counts %>%
 
 library(topicmodels)
 unique_id_lda <- LDA(unique_id_dtm, k = 21, control = list(seed = 1234))
-unique_id_lda
-saveRDS(unique_id_lda, file = "lda")
 
+saveRDS(unique_id_lda, file = here::here("analysis/data/lda"))
 
-chapter_topics <- tidy(readRDS("lda"), matrix = "beta")
-chapter_topics
+chapter_topics <- tidy(readRDS(here::here("analysis/data/lda")), matrix = "beta")
 
 top_terms <- chapter_topics %>%
   group_by(topic) %>%
   top_n(10, beta) %>%
   ungroup() %>%
   arrange(topic, -beta)
-top_terms
+
 
 library(ggplot2)
 top_terms_plot <-
@@ -153,15 +149,15 @@ top_terms %>%
   facet_wrap(~ topic, scales = "free") +
   coord_flip() +
   scale_x_reordered() 
-saveRDS(top_terms_plot, file = "SAA18 top term plot")
 
-unique_id_gamma <- tidy(readRDS("lda"), matrix = "gamma")
-unique_id_gamma
+saveRDS(top_terms_plot, file = here::here("analysis/data/SAA18 top term plot"))
+
+unique_id_gamma <- tidy(readRDS(here::here("analysis/data/lda")), matrix = "gamma")
 
 unique_id_gamma <- unique_id_gamma %>%
   separate(document, c("SessionNumber", "LastName", "FirstName"), sep = "_", convert = TRUE)
-unique_id_gamma
-saveRDS(unique_id_gamma, file = "gamma")
+
+saveRDS(unique_id_gamma, file = here::here("analysis/data/gamma"))
 
 
 #002
@@ -169,7 +165,6 @@ saveRDS(unique_id_gamma, file = "gamma")
 # read in data
 library(tidyverse)
 library(readxl)
-saa2018 <- read_excel("2018 SAA Title.xlsx")
 
 total_sessions_in_conf <- 338 # Look in the PDF
 
@@ -226,56 +221,59 @@ replace_foreign_chars <- function(dat,fromto) {
 }
 
 # tidy up accents and foreign characters
-saa2018$`first-named speaker` <- replace_foreign_chars(saa2018$FirstName, fromto)
+d$`first-named speaker` <- replace_foreign_chars(d$FirstName, fromto)
 
 # extract first name
 require("Hmisc")
 library(purrr)
 first_word_safe <- safely(first.word)
 
-saa2018$first_name <- 
-  map(saa2018$FirstName, first_word_safe) %>% 
+d$first_name <- 
+  map(d$FirstName, first_word_safe) %>% 
   map(., c(1)) %>% 
   flatten_chr()
 
 # fill down on session numbers because I only numbered the first speaker in each session.
 library(tidyr)
-saa2018 <- fill(saa2018, SessionNumber) 
+d <- fill(d, SessionNumber) 
 
 # remove dupicate names in each session 
-saa2018 <- 
-  saa2018 %>% 
+d <- 
+  d %>% 
   group_by(SessionNumber) %>% 
   distinct(FirstName, .keep_all = TRUE )
 
 # compute gender of first name
 library(gender)
+library(genderdata)
 library(dplyr)
 
 # make a safe function so we get a result even if it's an error
 gender_safe <-  safely(gender)
 
 # identify the gender of each first nane, this may take a few moments...
-saa2018_genders <- 
-  saa2018  %>% 
+d_genders <- 
+  d  %>% 
   # hold out name col to use it to make list-col
   nest(-LastName,-SessionNumber) %>%
   # compute genders and store results in list-col
   mutate(first_name_gender = map(data, 
                                  ~gender_safe(.x$`first-named speaker`))) 
-saveRDS(saa2018_genders, "gender")
+
+saveRDS(d_genders, here::here("analysis/data/gender"))
 
 # Ignoring error list, just looking at the result list with gender
-saa2018_genders_unnest <-  
-  readRDS("gender") %>% 
+d_genders_unnest <-  
+  readRDS(here::here("analysis/data/gender")) %>% 
   mutate(speaker_gender = transpose(first_name_gender)[['result']]) %>% 
   unnest_legacy(speaker_gender) %>% 
   select(SessionNumber,gender, LastName, name)
-saveRDS(saa2018_genders_unnest, "gender unnest")
+
+saveRDS(d_genders_unnest, here::here("analysis/data/gender unnest"))
 
 # compute gender ratio overall and for each session
 overall_gender_tally_plot<-
-  saa2018_genders_unnest %>% 
+  d_genders_unnest %>% 
   group_by(gender) %>% 
   tally() 
 
@@ -283,12 +281,14 @@ overall_gender_tally_plot<-
 library(dplyr)
 library(tidyverse)
 joined_table <-
-  left_join(readRDS("gamma"), 
-            readRDS("gender unnest"), 
+  left_join(unique_id_gamma, 
+            d_genders_unnest, 
             by = c("FirstName" = "name",
                    "SessionNumber" = "SessionNumber",
                    "LastName" = "LastName"))
-saveRDS(joined_table, "final table")
+
+
+saveRDS(joined_table, here::here("analysis/data/final table"))
 
 #Making table similar to Stats Rethinking
 joined_table_wider <-
@@ -332,7 +332,7 @@ joined_table %>%
   aov(gamma ~ gender * topic, data = . ) %>%
   summary
  
-d <-
+d1 <-
   joined_table %>%
   filter(!is.na(gender)) %>% 
  # filter(gamma >= 0.1) %>%
@@ -343,42 +343,7 @@ d <-
   pivot_wider(names_from = topic,
               values_from = new_gamma,
               values_fill = list(new_gamma = 0))
-joined_d <- left_join(d, readRDS("gamma"))
-
-m5.16 <- map(
-  alist(
-    gender ~ dbinom( mu , sigma ) ,
-    mu <- a + 
-      b.t1*topic1 + 
-      b.t1*topic1 +
-      b.t2*topic2 +
-      b.t3*topic3 +
-      b.t4*topic4 +
-      b.t5*topic5 +
-      b.t6*topic6 +
-      b.t7*topic7 +
-      b.t8*topic8 +
-      b.t9*topic9 +
-      b.t10*topic10 +
-      b.t11*topic11 +
-      b.t12*topic12 +
-      b.t13*topic13 +
-      b.t14*topic14 +
-      b.t15*topic15 +
-      b.t16*topic16 +
-      b.t17*topic17 +
-      b.t18*topic18 +
-      b.t19*topic19 +
-      b.t20*topic20 +
-      b.t21*topic21 +
-      b.g*gender,
-    a ~ dnorm( 0.6 , 10 ) ,
-    b.t ~ dnorm( 0 , 1 ) ,
-    b.g ~ dnorm( 0 , 1 ) ,
-    sigma ~ dunif( 0 , 10 )
-  ),
-  data=joined_table )
-precis(m5.16)
+joined_d <- left_join(d1, unique_id_gamma)
 
 # just a few people
 joined_table %>% 
@@ -388,10 +353,6 @@ joined_table %>%
              y = gamma)) +
   geom_boxplot()
   
-
-
-
-
 joined_table %>% 
   filter(topic == 4) %>% 
   filter(gamma >= 0.1) %>%
@@ -399,19 +360,6 @@ joined_table %>%
   mutate_at(vars(topic, gender), 
             as.factor) %>% 
   t.test(gamma ~ gender, data=.)
-  
-  
-  ggplot( aes(x = as.factor(topic),
-              y = gamma,
-              colour = gender)) +
-  geom_boxplot()
-
-
-fit <- glm(gender_b ~ topic1 + topic2 + topic3 + topic4 + topic5 + topic6 +
-             topic7 + topic8 + topic9 + topic10 + topic11 + topic12 + topic13 +
-             topic14 + topic15 + topic16 +topic17 + topic18 +topic19 +
-             topic20 +topic21, data = renamed_joined_table, family = binomial())
-summary(fit)
 
 ```
 
