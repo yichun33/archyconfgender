@@ -30,9 +30,12 @@ do_the_topic_model <- function(x) {
     cast_dtm(unique_id, word, n)
 
   library(topicmodels)
-  unique_id_lda <- LDA(unique_id_dtm, k = 21, control = list(seed = 1234))
+  unique_id_lda <- LDA(unique_id_dtm,
+                       k = 21,
+                       control = list(seed = 1234))
 
-  top_terms <- unique_id_lda %>%
+  top_terms <-  tidy(unique_id_lda,
+                     matrix = "beta")  %>%
     group_by(topic) %>%
     top_n(10, beta) %>%
     ungroup() %>%
@@ -41,7 +44,11 @@ do_the_topic_model <- function(x) {
   unique_id_gamma <- tidy(unique_id_lda, matrix = "gamma")
 
   unique_id_gamma <- unique_id_gamma %>%
-    separate(document, c("session", "FirstName"), sep = "_", convert = TRUE)
+    separate(document, c("session", "FirstName"),
+             sep = "_",
+             convert = TRUE)
+
+  return()
 }
 
 CAA18_tm <- do_the_topic_model(CAA18)
