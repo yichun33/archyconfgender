@@ -59,13 +59,16 @@ Gender under-representation and inequality has long existed, from under-represen
 ```{r}
 # CTRL + OPTION + i to insert a code block
 library(here)
+# column names should be:
+# session, FirstName, AbstractTitle
 SAA16 <- readxl::read_excel(here("analysis/data/SAA2016.xlsx"))
 SAA17 <- readxl::read_excel(here("analysis/data/SAA2017.xlsx"))
 SAA18 <- readxl::read_excel(here("analysis/data/SAA2018-finalprogram.xlsx"))
 SAA19 <- readxl::read_excel(here("analysis/data/SAA2019.xlsx"))
+
+
 EAA18 <- readxl::read_excel(here("analysis/data/2018 EAA.xlsx"))
 CAA18 <- readxl::read_excel(here("analysis/data/2018 CAA.xlsx"))
-SAA18_top_term_plot <- readRDS(here("analysis/data/SAA18 top term plot"))
 
 SAA16_row <- nrow(SAA16)
 SAA17_row <- nrow(SAA17)
@@ -80,11 +83,10 @@ CAA18_row <- nrow(CAA18)
 
 We collected lists of the people that presented research at recent SAA (2016 with `r SAA16_row` presenters, 2017 with `r SAA17_row` presenters, 2018 with `r SAA18_row` presenters, 2019 with `r SAA19_row` presenters) EAA (2018 with `r EAA18_row` presenters) and CAA (2018 with `r CAA18_row` presenters) conferences. We obtained publicly available programs of these conferences and also tidied the data into a rectangular form with variables including the primary author’s first name, last name and the title of their presentation. We used R and the gender package (Mullen 2018; Mihaljević 2019; Belvis et al. 2015) to predict the gender of all first-named presenters in our sample. We used the gender package to identify a first name as male or female, based on a probability scale computed from government records of name-gender data, specifically US Social Security Administration (SSA) baby name data [citation]. This method has the advantage of speed and ease of automation, but also some substantial limitations. We are only able to infer gender into binary male/female genders and assign probabilities for the first names into these categories. This has the unfortunate result of excluding other genders from the results, and we encourage conference organizers to collect gender data directly from participants to improve the representation of minority genders in future studies. The package often fails to classify non-English names, as the SSA data the package uses are mostly in English names. This means that people with non-English names are underrepresented in our results. To remove names where gender is ambiguous, which we define as a similar proportion of males and females having that name in the SSA data, we excluded names where the difference in proportions was less than 0.47, a figure we obtained by exploratory data analysis. It is important to note that the gender designations here are not self-identified by the presenters, but are computed probabilistically. Better quality data will come if presenters self-identify their gender, but we have no alternative because currently these data are not available. Our hope is that this work, despite its many limitations, will stimulate the collection of more reliable, justifiable, and useful data by conference organisers. 
 
-We are also interested in whether there is a variation in topic choices between the two biological genders in archaeological conferences. To do this we have used the process of topic modeling, which is used to find natural groups of words when we do not have a specific criteria or simply unsure what we are looking for. There are many ways to accomplish topic modeling, we have used the method of Latent Dirichlet allocation (LDA). This method is beneficial in our case because LDA does not treat one topic, which consists of many words, as separate from another topic. Before we can start using LDA, we have to first decide on the number of topics in our collection of texts. To do this we have used the R package ldatuning (add citation), which allows us to use multiple methods to compute an optimal number of groups for LDA processing. We then create a topic model for all our texts, this will assign all words in every document into topics, and assign each word a probability based on its per-topic-per-word probability, which we call beta. After this we keep only the top 10 words within each topic as keywords to represent each topic. Below is an example of a plot for the 2018 SAA that shows the predetermined number of groups each with top ten keywords in each group. From this we then have top terms from the topics of all conferences. We are only interested in keywords that are meaningful in a topic, therefore we have excluded words that are common in the field of archaeology or simply meaningless, for example, the, a, el, al, archaeology...etc. After figuring out the top terms, we can combine them with our earlier exploration of gender to see if one gender seems to favor another, for example if female or male favor topics about 'rock'.
+We are also interested in whether there is a variation in topic choices between these two genders in archaeological conferences. To do this we have used topic modeling, which is a method to automatically find related groups of words that resemble 'themes' or 'topics'. We used Latent Dirichlet allocation (LDA) because LDA does not treat one topic, which consists of many words, as separate from another topic. That is, a word can be present in many topics but with differnt weightings. When using LDA, we have to first decide on the number of topics that the method will identify in our texts. We used the R package ldatuning [citation] to compute an optimal number of topics for the LDA method to identify. We then create a topic model for all our texts, this will assign all words in every document into our set number of topics, and assign each word a probability based on its per-topic-per-word probability. To visualise the topic model we use the top 10 words within each topic as keywords to represent each topic. We excluded words that are common in the field of archaeology or have little semantic value, for example, 'the', 'a', 'el', 'al', 'archaeology', etc. We generated one topic model per conference. Each presentation at each conference is then assigned a vector of topic probabilities. 
 
-```{r}
-SAA18_top_term_plot
-```
+To explore the relationship between gender and topics we identified the most prominent topic for each presentation... 
+
 
 ```{r}
 #SAA2018 Topic Model
