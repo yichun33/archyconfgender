@@ -62,314 +62,45 @@ library(here)
 # column names should be:
 # session, FirstName, AbstractTitle
 
-SAA18 <- readxl::read_excel(here("analysis/data/2018 SAA Title.xlsx"))
-EAA18 <- readxl::read_excel(here("analysis/data/2018 EAA.xlsx"))
-CAA18 <- readxl::read_excel(here("analysis/data/2018 CAA.xlsx"))
+SAA18 <- readxl::read_excel(here("analysis/data/raw-data/2018 SAA Title.xlsx"))
+EAA18 <- readxl::read_excel(here("analysis/data/raw-data/2018 EAA.xlsx"))
+CAA18 <- readxl::read_excel(here("analysis/data/raw-data/2018 CAA.xlsx"))
 
-SAA18_row <- nrow(SAA18)
-EAA18_row <- nrow(EAA18)
-CAA18_row <- nrow(CAA18)
+SAA18_row <- nrow(SAA18)      
+EAA18_row <- nrow(EAA18)      
+CAA18_row <- nrow(CAA18)      
 
 ```
 
 # Methods
 
-We collected lists of the people that presented research at recent SAA (2018 with `r SAA18_row` presenters, EAA (2018 with `r EAA18_row` presenters) and CAA (2018 with `r CAA18_row` presenters) conferences. We obtained publicly available programs of these conferences and also tidied the data into a rectangular form with variables including the primary author’s first name, last name and the title of their presentation. We used R and the gender package (Mullen 2018; Mihaljević 2019; Belvis et al. 2015) to predict the gender of all first-named presenters in our sample. We used the gender package to identify a first name as male or female, based on a probability scale computed from government records of name-gender data, specifically US Social Security Administration (SSA) baby name data [citation]. This method has the advantage of speed and ease of automation, but also some substantial limitations. We are only able to infer gender into binary male/female genders and assign probabilities for the first names into these categories. This has the unfortunate result of excluding other genders from the results, and we encourage conference organizers to collect gender data directly from participants to improve the representation of minority genders in future studies. The package often fails to classify non-English names, as the SSA data the package uses are mostly in English names. This means that people with non-English names are underrepresented in our results. To remove names where gender is ambiguous, which we define as a similar proportion of males and females having that name in the SSA data, we excluded names where the difference in proportions was less than 0.47, a figure we obtained by exploratory data analysis. It is important to note that the gender designations here are not self-identified by the presenters, but are computed probabilistically. Better quality data will come if presenters self-identify their gender, but we have no alternative because currently these data are not available. Our hope is that this work, despite its many limitations, will stimulate the collection of more reliable, justifiable, and useful data by conference organisers. 
+We collected lists of the people that presented research at recent SAA (2018 with `r SAA18_row` presenters, EAA (2018 with `r EAA18_row` presenters) and CAA (2018 with `r CAA18_row` presenters) conferences. We obtained publicly available programs of these conferences and also tidied the data into a rectangular form with variables including the primary author's first name, last name and the title of their presentation. We used R and the gender package (Mullen 2018; Mihaljevic 2019; Belvis et al. 2015) to predict the gender of all first-named presenters in our sample. We used the gender package to identify a first name as male or female, based on a probability scale computed from government records of name-gender data, specifically US Social Security Administration (SSA) baby name data (Mullen 2019). This method has the advantage of speed and ease of automation, but also some substantial limitations. We are only able to infer gender into binary male/female genders and assign probabilities for the first names into these categories. This has the unfortunate result of excluding other genders from the results, and we encourage conference organizers to collect gender data directly from participants to improve the representation of minority genders in future studies. The package often fails to classify non-English names, as the SSA data the package uses are mostly in English names. This means that people with non-English names are underrepresented in our results. To remove names where gender is ambiguous, which we define as a similar proportion of males and females having that name in the SSA data, we excluded names where the difference in proportions was less than 0.47, a figure we obtained by exploratory data analysis. It is important to note that the gender designations here are not self-identified by the presenters, but are computed probabilistically. Better quality data will come if presenters self-identify their gender, but we have no alternative because currently these data are not available. Our hope is that this work, despite its many limitations, will stimulate the collection of more reliable, justifiable, and useful data by conference organisers. 
 
-We are also interested in whether there is a variation in topic choices between these two genders in archaeological conferences. To do this we have used topic modeling, which is a method to automatically find related groups of words that resemble 'themes' or 'topics'. We used Latent Dirichlet allocation (LDA) because LDA does not treat one topic, which consists of many words, as separate from another topic. That is, a word can be present in many topics but with differnt weightings. When using LDA, we have to first decide on the number of topics that the method will identify in our texts. We used the R package ldatuning [citation] to compute an optimal number of topics for the LDA method to identify. We then create a topic model for all our texts, this will assign all words in every document into our set number of topics, and assign each word a probability based on its per-topic-per-word probability. To visualise the topic model we use the top 10 words within each topic as keywords to represent each topic. We excluded words that are common in the field of archaeology or have little semantic value, for example, 'the', 'a', 'el', 'al', 'archaeology', etc. We generated one topic model per conference. Each presentation at each conference is then assigned a vector of topic probabilities. 
+We are also interested in whether there is a variation in topic choices between these two genders in archaeological conferences. To do this we have used topic modeling, which is a method to automatically find related groups of words that resemble 'themes' or 'topics'. We used Latent Dirichlet allocation (LDA) because LDA does not treat one topic, which consists of many words, as separate from another topic. That is, a word can be present in many topics but with differnt weightings. When using LDA, we have to first decide on the number of topics that the method will identify in our texts. We used the R package ldatuning (Nikita 2020) to compute an optimal number of topics for the LDA method to identify. We then create a topic model for all our texts, this will assign all words in every document into our set number of topics, and assign each word a probability based on its per-topic-per-word probability. To visualise the topic model we use the top 10 words within each topic as keywords to represent each topic. We excluded words that are common in the field of archaeology or have little semantic value, for example, 'the', 'a', 'el', 'al', 'archaeology', etc. We generated one topic model per conference. Each presentation at each conference is then assigned a vector of topic probabilities. 
 
 To explore the relationship between gender and topics we identified the most prominent topic for each presentation... 
 
-
-```{r}
-#SAA2018 Topic Model
-d <- readxl::read_excel(here::here("analysis/data/2018 SAA Title.xlsx"))
-
-library(tidyverse)
-library(tidytext)
-
-d_word <- d %>%
-  unnest_tokens(word, AbstractTitle)
-
-write.table(d_word, here::here("analysis/data/d.xlsx"))
-
-word_counts <- d_word %>%
-  anti_join(stop_words) %>%
-  filter(!word %in% c("de", "la", "el", "los", "user", "archaeology", "archaeological"
-                      ,"site", "archaic", "sites")) %>%
-  filter(!str_detect(word, "\\d")) %>%
-  filter(str_length(word) >= 3) %>%
-  filter(!str_detect(word, "\\.|'|\\<U")) %>%
-  unite(unique_id, SessionNumber, LastName, FirstName) %>%
-  count(unique_id, word, sort = TRUE) %>%
-  ungroup()
-
-unique_id_dtm <- word_counts %>%
-  cast_dtm(unique_id, word, n)
-
-# unique_id_dtm
-# library(ldatuning)
-# result <- FindTopicsNumber(
-#   unique_id_dtm,
-#   topics = seq(from = 2, to = 500, by = 1x``),
-#   metrics = c("Griffiths2004", "CaoJuan2009", "Arun2010", "Deveaud2014"),
-#   method = "Gibbs",
-#   control = list(seed = 77),
-#   mc.cores = 2L,
-#   verbose = TRUE
-# )
-# 
-# FindTopicsNumber_plot(result)
-
-library(topicmodels)
-unique_id_lda <- LDA(unique_id_dtm, k = 21, control = list(seed = 1234))
-
-saveRDS(unique_id_lda, file = here::here("analysis/data/lda"))
-
-chapter_topics <- tidy(readRDS(here::here("analysis/data/lda")), matrix = "beta")
-
-top_terms <- chapter_topics %>%
-  group_by(topic) %>%
-  top_n(10, beta) %>%
-  ungroup() %>%
-  arrange(topic, -beta)
-
-
-library(ggplot2)
-top_terms_plot <-
-top_terms %>%
-  mutate(term = reorder_within(term, beta, topic)) %>%
-  ggplot(aes(term, beta, fill = factor(topic))) +
-  geom_col(show.legend = FALSE) +
-  facet_wrap(~ topic, scales = "free") +
-  coord_flip() +
-  scale_x_reordered() 
-
-saveRDS(top_terms_plot, file = here::here("analysis/data/SAA18 top term plot"))
-
-unique_id_gamma <- tidy(readRDS(here::here("analysis/data/lda")), matrix = "gamma")
-
-unique_id_gamma <- unique_id_gamma %>%
-  separate(document, c("SessionNumber", "LastName", "FirstName"), sep = "_", convert = TRUE)
-
-saveRDS(unique_id_gamma, file = here::here("analysis/data/gamma"))
-
-
-#002
-
-# read in data
-library(tidyverse)
-library(readxl)
-
-total_sessions_in_conf <- 338 # Look in the PDF
-
-# clean up exotic symbols
-# from http://stackoverflow.com/a/17517674/1036500
-fromto <- read.table(text="
-                     from to
-                     Å¡ s
-                     Å oe
-                     Å¾ z
-                     Ã ss
-                     Ã¾ y
-                     Ã th
-                     Ã  a
-                     Ã¡ a
-                     Ã¢ a
-                     Ã£ a
-                     Ã¤ a
-                     Ã¥ a
-                     Ã¦ ae
-                     Ã§ c
-                     Ã¨ e
-                     Ã© e
-                     Ãª e
-                     Ã« e
-                     Ã E
-                     Ã¬ i
-                     Ã� i
-                     Ã® i
-                     Ã¯ i
-                     Ã° d
-                     Ã± n
-                     Ã² o
-                     Ã³ o
-                     Ã´ o
-                     Ãµ o
-                     Ã¶ o
-                     Ã¸ oe
-                     Ã¹ u
-                     Ãº u
-                     Ã» u
-                     Ã¼ u
-                     Ã½ y
-                     Ã¿ y
-                     Ä g
-                     ",header=TRUE)
-# Then the function:
-
-replace_foreign_chars <- function(dat,fromto) {
-  for(i in 1:nrow(fromto) ) {
-    dat <- gsub(fromto$from[i],fromto$to[i],dat)
-  }
-  dat
-}
-
-# tidy up accents and foreign characters
-d$`first-named speaker` <- replace_foreign_chars(d$FirstName, fromto)
-
-# extract first name
-require("Hmisc")
-library(purrr)
-first_word_safe <- safely(first.word)
-
-d$first_name <- 
-  map(d$FirstName, first_word_safe) %>% 
-  map(., c(1)) %>% 
-  flatten_chr()
-
-# fill down on session numbers because I only numbered the first speaker in each session.
-library(tidyr)
-d <- fill(d, SessionNumber) 
-
-# remove dupicate names in each session 
-d <- 
-  d %>% 
-  group_by(SessionNumber) %>% 
-  distinct(FirstName, .keep_all = TRUE )
-
-# compute gender of first name
-library(gender)
-library(genderdata)
-library(dplyr)
-
-# make a safe function so we get a result even if it's an error
-gender_safe <-  safely(gender)
-
-# identify the gender of each first nane, this may take a few moments...
-d_genders <- 
-  d  %>% 
-  # hold out name col to use it to make list-col
-  nest(-LastName,-SessionNumber) %>%
-  # compute genders and store results in list-col
-  mutate(first_name_gender = map(data, 
-                                 ~gender_safe(.x$`first-named speaker`))) 
-
-saveRDS(d_genders, here::here("analysis/data/gender"))
-
-# Ignoring error list, just looking at the result list with gender
-d_genders_unnest <-  
-  readRDS(here::here("analysis/data/gender")) %>% 
-  mutate(speaker_gender = transpose(first_name_gender)[['result']]) %>% 
-  unnest_legacy(speaker_gender) %>% 
-  select(SessionNumber,gender, LastName, name)
-
-saveRDS(d_genders_unnest, here::here("analysis/data/gender unnest"))
-
-# compute gender ratio overall and for each session
-overall_gender_tally_plot<-
-  d_genders_unnest %>% 
-  group_by(gender) %>% 
-  tally() 
-
-#003
-library(dplyr)
-library(tidyverse)
-joined_table <-
-  left_join(unique_id_gamma, 
-            d_genders_unnest, 
-            by = c("FirstName" = "name",
-                   "SessionNumber" = "SessionNumber",
-                   "LastName" = "LastName"))
-
-
-saveRDS(joined_table, here::here("analysis/data/final table"))
-
-#Making table similar to Stats Rethinking
-joined_table_wider <-
-joined_table %>%
-  pivot_wider(names_from = "topic", 
-              values_from = "gamma")
-  
-old_names <- names(joined_table_wider)[5:25]
-new_names <- paste0("topic", old_names)
-renamed_joined_table <-
-joined_table_wider %>% 
-  rename_at(vars(old_names), ~new_names) %>%
-  mutate(gender_b = ifelse(gender == "female", 1, 0))
-
-
-joined_table %>% 
-  filter(!is.na(gender)) %>% 
-  filter(gamma >= 0.1) %>% 
-ggplot(aes(x = as.factor(topic), y = gamma)) +
-  geom_boxplot() +
-  facet_wrap(~gender, ncol = 1) 
-
-
-joined_table %>% 
-  filter(!is.na(gender)) %>% 
-  filter(gamma >= 0.1) %>% 
-  mutate(new_gamma = ((gamma - mean(gamma)) / sd(gamma))^(1/2)) %>%
-  ggplot(aes(x = as.factor(topic),
-             y = new_gamma,
-             colour = gender)) +
-  geom_boxplot()
-
-
-joined_table %>% 
-  filter(!is.na(gender)) %>% 
-  filter(gamma >= 0.1) %>%
-  mutate(new_gamma = ((gamma - mean(gamma)) / sd(gamma))^(1/2)) %>%
-  filter(!is.nan(new_gamma)) %>%
-  mutate_at(vars(topic, gender), 
-            as.factor) %>% 
-  aov(gamma ~ gender * topic, data = . ) %>%
-  summary
- 
-d1 <-
-  joined_table %>%
-  filter(!is.na(gender)) %>% 
- # filter(gamma >= 0.1) %>%
-  mutate(new_gamma = ((gamma - mean(gamma)) / sd(gamma))^(1/2)) %>%
-  filter(!is.nan(new_gamma)) %>%
-  mutate(topic = paste0('topic', topic)) %>%
-  select(-gamma) %>%
-  pivot_wider(names_from = topic,
-              values_from = new_gamma,
-              values_fill = list(new_gamma = 0))
-joined_d <- left_join(d1, unique_id_gamma)
-
-# just a few people
-joined_table %>% 
-  filter(LastName == "Moss",
-         SessionNumber == 130) %>% 
-  ggplot( aes(x = as.factor(topic),
-             y = gamma)) +
-  geom_boxplot()
-  
-joined_table %>% 
-  filter(topic == 4) %>% 
-  filter(gamma >= 0.1) %>%
-  filter(!is.na(gender)) %>%
-  mutate_at(vars(topic, gender), 
-            as.factor) %>% 
-  t.test(gamma ~ gender, data=.)
-
-```
-
 # Results
 
-```{r get-data, eval = FALSE}
-# Note the path that we need to use to access our data files when rendering this document
-# my_data <- read.csv(here::here('analysis/data/raw_data/my_csv_file.csv'))
+```{r}
+# make the custom functions available here in this Rmd file
+source(here::here("analysis/paper/functions-for-gender.R"))
+source(here::here("analysis/paper/functions-for-topic-models.R"))
 ```
 
 
+```{r}
+# let's run the topic model fn for each conf
+CAA18_tm <- do_the_topic_model(CAA18)
+xxx_tm <- do_the_topic_model(xxx)
+xxx_tm <- do_the_topic_model(xxx)
 
-```{r demo-plot, fig.cap="A plot of random numbers"}
-plot(rnorm(10))
+# Let's save the output for each one
+saveRDS(CAA18_tm, here::here("analysis/data/derived-data/CAA18_topic_model.rds"))
+saveRDS(xxx_tm, here::here("analysis/data/derived-data/xxx_topic_model.rds"))
+saveRDS(xxx_tm, here::here("analysis/data/derived-data/xxx_topic_model.rds"))
 ```
+
 
 Figure \@ref(fig:demo-plot) shows how we can have a caption and cross-reference for a plot
 
