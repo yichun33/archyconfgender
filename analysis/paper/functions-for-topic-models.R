@@ -4,7 +4,7 @@
 
 # x is the data frame from the spreadsheet
 
-do_the_topic_model <- function(x) {
+do_the_topic_model <- function(x, k = 21) {
 
   d <- x
 
@@ -31,7 +31,7 @@ do_the_topic_model <- function(x) {
 
   library(topicmodels)
   unique_id_lda <- LDA(unique_id_dtm,
-                       k = 21,
+                       k = k,
                        control = list(seed = 1234))
 
   top_terms <-  tidy(unique_id_lda,
@@ -48,7 +48,31 @@ do_the_topic_model <- function(x) {
              sep = "_",
              convert = TRUE)
 
-  return()
+  return(list(unique_id_dtm = unique_id_dtm,
+              unique_id_lda = unique_id_lda,
+              top_terms = top_terms,
+              unique_id_gamma = unique_id_gamma))
+
 }
 
-CAA18_tm <- do_the_topic_model(CAA18)
+
+
+# access the different elements with $
+
+# compute the optimum number of topics
+
+compute_optimum_n_topics <- function(dtm){
+  ldatuning::FindTopicsNumber(
+    dtm,
+   topics = seq(from = 2, to = 500, by = 1),
+   metrics = c("Griffiths2004", "CaoJuan2009", "Arun2010", "Deveaud2014"),
+   method = "Gibbs",
+   control = list(seed = 77),
+   mc.cores = 2L,
+   verbose = TRUE
+ )
+}
+
+# CAA18_tm_n_topics <- compute_optimum_n_topics(CAA18_tm$unique_id_dtm)
+# ldatuning::FindTopicsNumber_plot(CAA18_tm_n_topics)
+
