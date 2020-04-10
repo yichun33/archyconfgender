@@ -2,9 +2,11 @@
 
 # function to compute topic model for a conf
 
+# x is the data frame from the spreadsheet
+
 do_the_topic_model <- function(x) {
 
-  d <- readxl::read_excel(here::here(x))
+  d <- x
 
   library(tidyverse)
   library(tidytext)
@@ -20,7 +22,7 @@ do_the_topic_model <- function(x) {
     filter(!str_detect(word, "\\d")) %>%
     filter(str_length(word) >= 3) %>%
     filter(!str_detect(word, "\\.|'|\\<U")) %>%
-    unite(unique_id, SessionNumber, LastName, FirstName) %>%
+    unite(unique_id, session, FirstName) %>%
     count(unique_id, word, sort = TRUE) %>%
     ungroup()
 
@@ -39,7 +41,7 @@ do_the_topic_model <- function(x) {
   unique_id_gamma <- tidy(unique_id_lda, matrix = "gamma")
 
   unique_id_gamma <- unique_id_gamma %>%
-    separate(document, c("SessionNumber", "LastName", "FirstName"), sep = "_", convert = TRUE)
+    separate(document, c("session", "FirstName"), sep = "_", convert = TRUE)
 }
 
-do_the_topic_model("")
+CAA18_tm <- do_the_topic_model(CAA18)
