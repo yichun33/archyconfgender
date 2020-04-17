@@ -99,6 +99,12 @@ SAA18_tm <- do_the_topic_model(SAA18, 21)
 saveRDS(CAA18_tm, here::here("analysis/data/derived-data/CAA18_topic_model.rds"))
 saveRDS(EAA18_tm, here::here("analysis/data/derived-data/EAA18_topic_model.rds"))
 saveRDS(SAA18_tm, here::here("analysis/data/derived-data/SAA18_topic_model.rds"))
+
+# gender model
+CAA18_gm <- get_the_gender_data(CAA18)
+saveRDS(CAA18_gm, here::here("analysis/data/derived-data/CAA18_gender_model.rds"))
+SAA18_gm <- get_the_gender_data(SAA18)
+saveRDS(SAA18_gm, here::here("analysis/data/derived-data/SAA18_gender_model.rds"))
 ```
 
 
