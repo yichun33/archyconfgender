@@ -2,15 +2,15 @@
 
 # functions for joining table
 
-# x is dataframe, y is dataframe
+# x is a _tm file, y is dataframe
 
 joining_table_topic_and_gender <- function(x, y)
 
 library(dplyr)
 library(tidyverse)
 joined_table <-
-  left_join(readRDS("gamma"),
-            readRDS("gender unnest"),
+  left_join(x$unique_id_gamma,
+            x$genders_unnest,
             by = c("FirstName" = "name",
                    "SessionNumber" = "SessionNumber",
                    "LastName" = "LastName"))
