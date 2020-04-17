@@ -4,7 +4,7 @@
 
 # x is the data frame from the spreadsheet
 
-do_the_topic_model <- function(x, k = 21) {
+do_the_topic_model <- function(x, k) {
 
   d <- x
 

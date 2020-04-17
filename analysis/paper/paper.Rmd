@@ -91,14 +91,14 @@ source(here::here("analysis/paper/functions-for-topic-models.R"))
 
 ```{r}
 # let's run the topic model fn for each conf
-CAA18_tm <- do_the_topic_model(CAA18)
-xxx_tm <- do_the_topic_model(xxx)
-xxx_tm <- do_the_topic_model(xxx)
+CAA18_tm <- do_the_topic_model(CAA18, 21)
+EAA18_tm <- do_the_topic_model(EAA18, 12)
+SAA18_tm <- do_the_topic_model(SAA18, 21)
 
 # Let's save the output for each one
 saveRDS(CAA18_tm, here::here("analysis/data/derived-data/CAA18_topic_model.rds"))
-saveRDS(xxx_tm, here::here("analysis/data/derived-data/xxx_topic_model.rds"))
-saveRDS(xxx_tm, here::here("analysis/data/derived-data/xxx_topic_model.rds"))
+saveRDS(EAA18_tm, here::here("analysis/data/derived-data/EAA18_topic_model.rds"))
+saveRDS(SAA18_tm, here::here("analysis/data/derived-data/SAA18_topic_model.rds"))
 ```
 
 
