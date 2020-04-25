@@ -5,41 +5,6 @@ library(quanteda)
 x <-
   readxl::read_excel(here("analysis/data/raw-data/2018 SAA Title.xlsx"))
 
-myCorpus <- corpus(x$AbstractTitle)
-dfm <-
-  dfm(
-    myCorpus,
-    remove = c(stopwords("english")),
-    stem = F,
-    remove_numbers = T,
-    remove_punct = T,
-    remove_symbols = T,
-    split_hyphens = F
-  )
-
-topfeatures(dfm, 25)
-
-dfm <- dfm_trim(dfm, min_docfreq = 2)
-
-topfeatures(dfm, 25)
-
-library(RColorBrewer)
-textplot_wordcloud(
-  dfm,
-  scale = c(3.5, 0.75),
-  colors = brewer.pal(8, "Dark2"),
-  random.order = F,
-  rot.per = 0.1,
-  max.words = 100
-)
-
-
-stmdfm <- convert(dfm, to = "stm", docvars = docvars(myCorpus))
-
-
-
-
-
 library(stm)
 library(dplyr)
 
@@ -80,29 +45,35 @@ model <-
     init.type = "Spectral"
   )
 
-labelTopics(model)
-
 topic_labels <-
-  data.frame(labelTopics(model)$prob)
+  data.frame(labelTopics(model, n = 12)$frex)
+
+topic_labels_chr <-
+topic_labels %>%
+  t %>%
+  as_tibble() %>%
+  map(function(...) {
+    current <- tibble(...)
+     current  %>%
+       mutate_all(as.character) %>%
+       unlist(., use.names=FALSE) %>%
+       paste0(., collapse = ", ")
+  }) %>%
+  unlist %>%
+  unname
 
 out$meta$gender <- as.factor(out$meta$gender)
 
-prep <- estimateEffect(1:20 ~ gender,
+prep <- estimateEffect(1:model$settings$dim$K ~ gender,
                        model,
                        meta = out$meta,
                        uncertainty = "Global")
 
 topic <-
   data.frame(
-    topicnames = c(
-      "Problem Solving",
-      "Time Management",
-      "Provides Support",
-      "Ask Questions",
-      "Shows Respect"
-    ),
-    TopicNumber = 1:k,
-    TopicProportions = colMeans(stmFit$theta),
+    topicnames = topic_labels_chr,
+    TopicNumber = 1:model$settings$dim$K,
+    TopicProportions = colMeans(model$theta),
     stringsAsFactors = F
   )
 
@@ -113,10 +84,96 @@ plot(
   covariate = "gender",
   cov.value1 = "female",
   cov.value2 = "male",
-  model = model
+  model = model,
+  omit.plot = TRUE
 )
-
 
 
 trank = order(unlist(Result$means))
 temp.topic <- topic[trank, ]
+
+Result <-
+  plot(
+    prep,
+    method = "difference",
+    covariate = "gender",
+    cov.value1 = "female",
+    cov.value2 = "male",
+    model = model,
+    topics = temp.topic$TopicNumber,
+    labeltype = "custom",
+    custom.labels = temp.topic$topicnames,
+    cex = 0.01,
+    omit.plot = TRUE
+  )
+
+Result_tbl <-
+tibble(means = unlist(Result$means),
+       topics = unlist(Result$topics),
+       labels = unlist(Result$labels),
+       ci_lower  = map_dbl(Result$cis, ~.x[1]),
+       ci_upper = map_dbl(Result$cis, ~.x[2]),
+       order = 1:length( unlist(Result$means))
+)
+
+highlight_tbl <-
+  Result_tbl %>%
+  filter(ci_lower > 0 | ci_upper < 0)
+
+normal_tbl <-
+  Result_tbl %>%
+  filter(ci_lower < 0) %>%
+  filter(ci_upper > 0)
+
+highlight_size = 2.2
+normal_size = 2.2
+normal_colour = "grey30"
+
+ggplot() +
+  theme_bw() +
+  geom_vline(xintercept = 0,
+             colour = "red") +
+  geom_linerange(data = normal_tbl,
+               aes(y = order,
+                   xmin =ci_lower,
+                   xmax = ci_upper),
+               colour = normal_colour) +
+  geom_linerange(data = highlight_tbl,
+                 aes(y = order,
+                     xmin =ci_lower,
+                     xmax = ci_upper),
+                 colour = "red") +
+  geom_linerange(data = highlight_tbl,
+                 aes(y = order,
+                     xmin =ci_lower,
+                     xmax = ci_upper),
+                 colour = "red") +
+  geom_point(data = normal_tbl,
+             aes(means,
+                 order),
+             colour = normal_colour) +
+  geom_point(data = highlight_tbl,
+             aes(means,
+                 order),
+             pch = 17,
+             colour = "red",
+             size = 2) +
+  geom_text(data = normal_tbl,
+            aes(means,
+                order + 0.5,
+                label = labels),
+            size = normal_size) +
+  geom_text(data = highlight_tbl,
+            aes(means,
+                order + 0.5,
+                label = labels),
+            size = highlight_size,
+            colour = "red") +
+  xlab("        ← more men  ...  more women →") +
+  ylab("Topic")
+
+
+
+
+
+
