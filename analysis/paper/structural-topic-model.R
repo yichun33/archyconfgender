@@ -26,13 +26,13 @@ docs <- out$documents
 vocab <- out$vocab
 meta <- out$meta
 
-
 out <-
   prepDocuments(processed$documents,
                 processed$vocab,
                 processed$meta,
                 lower.thresh = 15)
 
+set.seed(33)
 model <-
   stm(
     documents = out$documents,
@@ -41,7 +41,6 @@ model <-
     # watch the output to see how many topics it picks
     prevalence =  ~ gender,
     data = out$meta,
-    max.em.its = 10,
     init.type = "Spectral"
   )
 
