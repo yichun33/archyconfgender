@@ -57,14 +57,13 @@ Gender under-representation and inequality has long existed, from under-represen
 
 
 ```{r}
-# CTRL + OPTION + i to insert a code block
 library(here)
 # column names should be:
 # session, FirstName, AbstractTitle
 
-SAA18 <- readxl::read_excel(here("analysis/data/raw-data/2018 SAA Title.xlsx"))
-EAA18 <- readxl::read_excel(here("analysis/data/raw-data/2018 EAA.xlsx"))
-CAA18 <- readxl::read_excel(here("analysis/data/raw-data/2018 CAA.xlsx"))
+SAA18 <- readxl::read_excel(here::here("analysis/data/raw-data/2018 SAA Title.xlsx"))
+EAA18 <- readxl::read_excel(here::here("analysis/data/raw-data/2018 EAA.xlsx")) 
+CAA18 <- readxl::read_excel(here::here("analysis/data/raw-data/2018 CAA.xlsx"))
 
 SAA18_row <- nrow(SAA18)      
 EAA18_row <- nrow(EAA18)      
@@ -100,39 +99,54 @@ The number of ... `r number_of_papers_saa_2018` ...
 -- variance of topics with gender for each conf (1 para)
 
 
-```{r}
-# make the custom functions available here in this Rmd file
+```{r, eval=FALSE}
+
+# make the custom function available here in this Rmd file
 source(here::here("analysis/paper/functions-for-gender.R"))
-source(here::here("analysis/paper/functions-for-topic-models.R"))
-```
 
+# compute gender model, take a few minutes...
+SAA18_gm <- get_the_gender_data(SAA18)
+saveRDS(SAA18_gm, here::here("analysis/data/derived-data/SAA18_gender_model.rds")) # ok
 
-```{r}
-# let's run the topic model fn for each conf
-CAA18_tm <- do_the_topic_model(CAA18, 21)
-EAA18_tm <- do_the_topic_model(EAA18, 12)
-SAA18_tm <- do_the_topic_model(SAA18, 21)
+EAA18_gm <- get_the_gender_data(EAA18, first_name_appears_first = FALSE)
+saveRDS(EAA18_gm, here::here("analysis/data/derived-data/EAA18_gender_model.rds"))
 
-# Let's save the output for each one
-saveRDS(CAA18_tm, here::here("analysis/data/derived-data/CAA18_topic_model.rds"))
-saveRDS(EAA18_tm, here::here("analysis/data/derived-data/EAA18_topic_model.rds"))
-saveRDS(SAA18_tm, here::here("analysis/data/derived-data/SAA18_topic_model.rds"))
-
-# gender model
 CAA18_gm <- get_the_gender_data(CAA18)
 saveRDS(CAA18_gm, here::here("analysis/data/derived-data/CAA18_gender_model.rds"))
-SAA18_gm <- get_the_gender_data(SAA18)
-saveRDS(SAA18_gm, here::here("analysis/data/derived-data/SAA18_gender_model.rds"))
+```
+
+```{r, eval=FALSE}
+
+# make the custom function available here in this Rmd file
+source(here::here("analysis/paper/function-for-structural-topic-model.R"))
+
+# compute and save the topic model for each conf, takes quite a long time
+SAA18_stm <- 
+  stm_model_and_plot(conf_paper_titles = SAA18, 
+                     conf_gender_results = SAA18_gm, 
+                     max.em.its = 1000)
+
+saveRDS(SAA18_stm, here::here("analysis/data/derived-data/SAA18_topic_model_and_plot.rds"))
+
+CAA18_stm <-   
+  stm_model_and_plot(conf_paper_titles = CAA18, 
+                     conf_gender_results = CAA18_gm, 
+                     lower_thresh = 3,
+                     max.em.its = 1000)
+
+saveRDS(CAA18_stm, here::here("analysis/data/derived-data/CAA18_topic_model_and_plot.rds"))
+
+EAA18_stm <- 
+  stm_model_and_plot(conf_paper_titles = EAA18, 
+                     conf_gender_results = EAA18_gm, 
+                     first_name_appears_first = FALSE,
+                     max.em.its = 1000)
+
+saveRDS(EAA18_stm, here::here("analysis/data/derived-data/EAA18_topic_model.rds"))
+
 ```
 
 
-Figure \@ref(fig:demo-plot) shows how we can have a caption and cross-reference for a plot
-
-```{r demo-inline-code}
-x <- round(pi, 2)
-```
-
-Here is an example of inline code `r x` in the middle of a sentence. 
 
 # Discussion
 
