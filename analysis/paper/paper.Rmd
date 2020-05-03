@@ -142,8 +142,32 @@ EAA18_stm <-
                      first_name_appears_first = FALSE,
                      max.em.its = 1000)
 
-saveRDS(EAA18_stm, here::here("analysis/data/derived-data/EAA18_topic_model.rds"))
+saveRDS(EAA18_stm, here::here("analysis/data/derived-data/EAA18_topic_model_and_plot.rds"))
+```
 
+```{r}
+# get plots
+
+# SAA -----
+SAA18_stm_plot <- 
+  readr::read_rds(here::here("analysis/data/derived-data/SAA18_topic_model_and_plot.rds"))
+
+SAA18_stm_plot$plot
+ggsave(here::here("analysis/figures/SAA18_stm_plot.png"), height = 7, width = 6)
+
+# CAA -----
+CAA18_stm_plot <- 
+  readr::read_rds(here::here("analysis/data/derived-data/CAA18_topic_model_and_plot.rds"))
+
+CAA18_stm_plot$plot
+ggsave(here::here("analysis/figures/CAA18_stm_plot.png"), height = 7, width = 6)
+
+# EAA -----
+EAA18_stm_plot <- 
+  readr::read_rds(here::here("analysis/data/derived-data/EAA18_topic_model_and_plot.rds"))
+
+EAA18_stm_plot$plot
+ggsave(here::here("analysis/figures/EAA18_stm_plot.png"), height = 7, width = 6)
 ```
 
 
