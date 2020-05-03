@@ -35,6 +35,7 @@ out <-
 set.seed(33)
 model <-
   stm(
+    seed = 33,
     documents = out$documents,
     vocab = out$vocab,
     K = 0,
@@ -170,6 +171,9 @@ ggplot() +
             colour = "red") +
   xlab("        ← more men  ...  more women →") +
   ylab("Topic")
+
+ggsave(here::here("analysis/figures/stm-covariate-plot.png"),
+       height = 10, width = 6)
 
 
 
