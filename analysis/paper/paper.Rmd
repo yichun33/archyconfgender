@@ -87,16 +87,15 @@ number_of_papers_saa_2018 <-  ...
 ```
 
 
-- some basic details ( 1 para)
--- number of papers that are in our sample for each conference
--- number of men and women first-named presented, state the gender ratio 
--- number of people that we could not assign a gender to
 
-The number of ... `r number_of_papers_saa_2018` ... 
+In our analysis we have a total paper distribution of SAA with `SAA18_row` papers, EAA with `EAA18_row` papers and CAA with `CAA18_row` of papers. For SAA, we have `female_count_SAA18` females and `male_count_SAA18` males, for EAA, we have `female_count_EAA18` females and `male_count_EAA18` males, finally for CAA, we have `female_count_CAA18` females and `male_count_CAA18` males. This means that our ratio of females to males in each of the cnferences are as follows, SAA with `female_to_male_SAA18`, EAA with `female_to_male_EAA18` and CAA with `female_to_male_CAA18`. As noted earlier out data set did not originally include the gender of each presenters' thus we are only able to assign gender to presenters based on their first names, and this means that some people are not able to receive a gender due to our filter, in SAA we are forced to drop `missing_gender_SAA18` number of topics,
+`missing_gender_EAA18` topics in EAA, `missing_gender_CAA18` topics in CAA.
 
-- the main details
--- number of topics that are optimum for each conf (1 para)
--- variance of topics with gender for each conf (1 para)
+
+We have used the built in function of the R package stm to calculate the number of topics that is best for each conferences, for SAA we have generated a total of `SAA_stm_topic_number` topics, for EAA we have generated a total of `EAA_stm_topic_number` topics, and for CAA we hve generated a total of `CAA_stm_topic_number`.
+
+First let's examine the figure for SAA 2018's stm topic plot that tells us where a topic seems to fall under. One of the main difference that we can see between the topics of the genders are the locations that the presenters are interested in, it seems like that females are more likely to have a topic at a specific region such as mesoamerica, arizona and national parks, while males are more likely to have a topic that are in the western regions. Next, let's take a look at EAA's difference between females and males. Although both red-marked topics include topics with "mediterranean", it is important to distinguish that females seems to be focusing on western mediterranean while males seems to be focusing on northern mediterranean. Another main difference that we have noticed is that males tends to have topics that are related to architect, while the topic regarding research methods using isotopes seems to be more popular for females. Lastly, in CAA's stm topic plot we can see a clearer pattern from the topics marked in red. For females from CAA, we see that topics that are associated with Geographic Information System (GIS) are more likely to be a topic for female presenters. Another female-associated topics from the CAA topic plot is topics that includes the word women, excav and inform. As for males from CAA, there doesn't seem to have a specific word that is more associated with males besides the word enviorn.
+
 
 
 ```{r, eval=FALSE}
@@ -113,6 +112,43 @@ saveRDS(EAA18_gm, here::here("analysis/data/derived-data/EAA18_gender_model.rds"
 
 CAA18_gm <- get_the_gender_data(CAA18)
 saveRDS(CAA18_gm, here::here("analysis/data/derived-data/CAA18_gender_model.rds"))
+```
+
+```{r, eval=FALSE}
+SAA18_gender <-
+  readRDS(here::here("analysis/data/derived-data/SAA18_gender_model.rds"))
+EAA18_gender <-
+  readRDS(here::here("analysis/data/derived-data/EAA18_gender_model.rds"))
+CAA18_gender <-
+  readRDS(here::here("analysis/data/derived-data/CAA18_gender_model.rds"))
+
+female_count_SAA18 <- 
+  length(which(SAA18_gender$gender == "female"))
+male_count_SAA18 <- 
+  length(which(SAA18_gender$gender == "male"))
+female_to_male_SAA18 <- 
+  female_count_SAA18 / male_count_SAA18
+missing_gender_SAA18 <- 
+  SAA18_row - (female_count_SAA18 + male_count_SAA18)
+  
+
+female_count_EAA18 <- 
+  length(which(EAA18_gender$gender == "female"))
+male_count_EAA18 <- 
+  length(which(EAA18_gender$gender == "male"))
+female_to_male_EAA18 <- 
+  female_count_EAA18 / male_count_EAA18
+missing_gender_EAA18 <-
+  EAA18_row - (female_count_EAA18 + male_count_EAA18)
+
+female_count_CAA18 <- 
+  length(which(CAA18_gender$gender == "female"))
+male_count_CAA18 <- 
+  length(which(CAA18_gender$gender == "male"))
+female_to_male_CAA18 <- 
+  female_count_CAA18 / male_count_CAA18
+missing_gender_CAA18 <-
+  CAA18_row - (female_count_CAA18 + male_count_CAA18)
 ```
 
 ```{r, eval=FALSE}
@@ -159,6 +195,9 @@ SAA18_stm_plot <-
 SAA18_stm_plot$plot
 ggsave(here::here("analysis/figures/SAA18_stm_plot.png"), height = 7, width = 6)
 
+SAA_stm_topic_number <-
+  SAA18_stm_plot$model$settings$dim$K
+
 # CAA -----
 CAA18_stm_plot <- 
   readr::read_rds(here::here("analysis/data/derived-data/CAA18_topic_model_and_plot.rds"))
@@ -166,12 +205,18 @@ CAA18_stm_plot <-
 CAA18_stm_plot$plot
 ggsave(here::here("analysis/figures/CAA18_stm_plot.png"), height = 7, width = 6)
 
+CAA_stm_topic_number <-
+  CAA18_stm_plot$model$settings$dim$K
+
 # EAA -----
 EAA18_stm_plot <- 
   readr::read_rds(here::here("analysis/data/derived-data/EAA18_topic_model_and_plot.rds"))
 
 EAA18_stm_plot$plot
 ggsave(here::here("analysis/figures/EAA18_stm_plot.png"), height = 7, width = 6)
+
+EAA_stm_topic_number <-
+  EAA18_stm_plot$model$settings$dim$K
 ```
 
 
