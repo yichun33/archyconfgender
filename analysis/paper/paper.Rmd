@@ -120,6 +120,10 @@ saveRDS(CAA18_gm, here::here("analysis/data/derived-data/CAA18_gender_model.rds"
 # make the custom function available here in this Rmd file
 source(here::here("analysis/paper/function-for-structural-topic-model.R"))
 
+SAA18_gm <- readr::read_rds(here::here("analysis/data/derived-data/SAA18_gender_model.rds")) 
+EAA18_gm <- readr::read_rds(here::here("analysis/data/derived-data/EAA18_gender_model.rds"))
+CAA18_gm <- readr::read_rds(here::here("analysis/data/derived-data/CAA18_gender_model.rds"))
+
 # compute and save the topic model for each conf, takes quite a long time
 SAA18_stm <- 
   stm_model_and_plot(conf_paper_titles = SAA18, 
