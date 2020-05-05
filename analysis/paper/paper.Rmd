@@ -14,7 +14,7 @@ institute:
   - UofA: University of Another Place
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
-    bookdown::word_document2:
+    bookdown::html_document2:
       fig_caption: yes
       reference_docx: "../templates/template.docx" # Insert path for the DOCX file
       pandoc_args:
@@ -82,19 +82,6 @@ We then tried another process of topic modeling called Structural Topic Model (S
 To explore the relationship between gender and topics we identified the most prominent topic for each presentation... 
 
 # Results
-```{r}
-number_of_papers_saa_2018 <-  ...
-```
-
-
-
-In our analysis we have a total paper distribution of SAA with `SAA18_row` papers, EAA with `EAA18_row` papers and CAA with `CAA18_row` of papers. For SAA, we have `female_count_SAA18` females and `male_count_SAA18` males, for EAA, we have `female_count_EAA18` females and `male_count_EAA18` males, finally for CAA, we have `female_count_CAA18` females and `male_count_CAA18` males. This means that our ratio of females to males in each of the cnferences are as follows, SAA with `female_to_male_SAA18`, EAA with `female_to_male_EAA18` and CAA with `female_to_male_CAA18`. As noted earlier out data set did not originally include the gender of each presenters' thus we are only able to assign gender to presenters based on their first names, and this means that some people are not able to receive a gender due to our filter, in SAA we are forced to drop `missing_gender_SAA18` number of topics,
-`missing_gender_EAA18` topics in EAA, `missing_gender_CAA18` topics in CAA.
-
-
-We have used the built in function of the R package stm to calculate the number of topics that is best for each conferences, for SAA we have generated a total of `SAA_stm_topic_number` topics, for EAA we have generated a total of `EAA_stm_topic_number` topics, and for CAA we hve generated a total of `CAA_stm_topic_number`.
-
-First let's examine the figure for SAA 2018's stm topic plot that tells us where a topic seems to fall under. One of the main difference that we can see between the topics of the genders are the locations that the presenters are interested in, it seems like that females are more likely to have a topic at a specific region such as mesoamerica, arizona and national parks, while males are more likely to have a topic that are in the western regions. Next, let's take a look at EAA's difference between females and males. Although both red-marked topics include topics with "mediterranean", it is important to distinguish that females seems to be focusing on western mediterranean while males seems to be focusing on northern mediterranean. Another main difference that we have noticed is that males tends to have topics that are related to architect, while the topic regarding research methods using isotopes seems to be more popular for females. Lastly, in CAA's stm topic plot we can see a clearer pattern from the topics marked in red. For females from CAA, we see that topics that are associated with Geographic Information System (GIS) are more likely to be a topic for female presenters. Another female-associated topics from the CAA topic plot is topics that includes the word women, excav and inform. As for males from CAA, there doesn't seem to have a specific word that is more associated with males besides the word enviorn.
 
 
 
@@ -112,43 +99,6 @@ saveRDS(EAA18_gm, here::here("analysis/data/derived-data/EAA18_gender_model.rds"
 
 CAA18_gm <- get_the_gender_data(CAA18)
 saveRDS(CAA18_gm, here::here("analysis/data/derived-data/CAA18_gender_model.rds"))
-```
-
-```{r, eval=FALSE}
-SAA18_gender <-
-  readRDS(here::here("analysis/data/derived-data/SAA18_gender_model.rds"))
-EAA18_gender <-
-  readRDS(here::here("analysis/data/derived-data/EAA18_gender_model.rds"))
-CAA18_gender <-
-  readRDS(here::here("analysis/data/derived-data/CAA18_gender_model.rds"))
-
-female_count_SAA18 <- 
-  length(which(SAA18_gender$gender == "female"))
-male_count_SAA18 <- 
-  length(which(SAA18_gender$gender == "male"))
-female_to_male_SAA18 <- 
-  female_count_SAA18 / male_count_SAA18
-missing_gender_SAA18 <- 
-  SAA18_row - (female_count_SAA18 + male_count_SAA18)
-  
-
-female_count_EAA18 <- 
-  length(which(EAA18_gender$gender == "female"))
-male_count_EAA18 <- 
-  length(which(EAA18_gender$gender == "male"))
-female_to_male_EAA18 <- 
-  female_count_EAA18 / male_count_EAA18
-missing_gender_EAA18 <-
-  EAA18_row - (female_count_EAA18 + male_count_EAA18)
-
-female_count_CAA18 <- 
-  length(which(CAA18_gender$gender == "female"))
-male_count_CAA18 <- 
-  length(which(CAA18_gender$gender == "male"))
-female_to_male_CAA18 <- 
-  female_count_CAA18 / male_count_CAA18
-missing_gender_CAA18 <-
-  CAA18_row - (female_count_CAA18 + male_count_CAA18)
 ```
 
 ```{r, eval=FALSE}
@@ -185,18 +135,24 @@ EAA18_stm <-
 saveRDS(EAA18_stm, here::here("analysis/data/derived-data/EAA18_topic_model_and_plot.rds"))
 ```
 
+
 ```{r}
 # get plots
+library(tidyverse)
 
 # SAA -----
 SAA18_stm_plot <- 
   readr::read_rds(here::here("analysis/data/derived-data/SAA18_topic_model_and_plot.rds"))
 
 SAA18_stm_plot$plot
-ggsave(here::here("analysis/figures/SAA18_stm_plot.png"), height = 7, width = 6)
+ggplot2::ggsave(here::here("analysis/figures/SAA18_stm_plot.png"), 
+       height = 7, 
+       width = 6)
 
 SAA_stm_topic_number <-
   SAA18_stm_plot$model$settings$dim$K
+SAA_stm_topic_number_significant_covary <- 
+  nrow(layer_data(SAA18_stm_plot$plot, 3))
 
 # CAA -----
 CAA18_stm_plot <- 
@@ -207,6 +163,8 @@ ggsave(here::here("analysis/figures/CAA18_stm_plot.png"), height = 7, width = 6)
 
 CAA_stm_topic_number <-
   CAA18_stm_plot$model$settings$dim$K
+CAA_stm_topic_number_significant_covary <- 
+  nrow(layer_data(CAA18_stm_plot$plot, 3))
 
 # EAA -----
 EAA18_stm_plot <- 
@@ -217,7 +175,64 @@ ggsave(here::here("analysis/figures/EAA18_stm_plot.png"), height = 7, width = 6)
 
 EAA_stm_topic_number <-
   EAA18_stm_plot$model$settings$dim$K
+EAA_stm_topic_number_significant_covary <- 
+  nrow(layer_data(EAA18_stm_plot$plot, 3))
 ```
+
+```{r, eval=TRUE}
+SAA18_gender <-
+  readRDS(here::here("analysis/data/derived-data/SAA18_gender_model.rds"))
+EAA18_gender <-
+  readRDS(here::here("analysis/data/derived-data/EAA18_gender_model.rds"))
+CAA18_gender <-
+  readRDS(here::here("analysis/data/derived-data/CAA18_gender_model.rds"))
+
+count_gendered_SAA18 <- nrow(SAA18_gender)
+perc_gendered_SAA18 <- round(nrow(SAA18_gender) / SAA18_row, 2) * 100
+female_count_SAA18 <- 
+  length(which(SAA18_gender$gender == "female"))
+male_count_SAA18 <- 
+  length(which(SAA18_gender$gender == "male"))
+female_to_male_SAA18 <- 
+  round(female_count_SAA18 / male_count_SAA18,1)
+missing_gender_SAA18 <- 
+  SAA18_row - (female_count_SAA18 + male_count_SAA18)
+  
+count_gendered_EAA18 <- nrow(EAA18_gender)
+perc_gendered_EAA18 <- round(nrow(EAA18_gender) / EAA18_row, 2) * 100
+female_count_EAA18 <- 
+  length(which(EAA18_gender$gender == "female"))
+male_count_EAA18 <- 
+  length(which(EAA18_gender$gender == "male"))
+female_to_male_EAA18 <- 
+  round(female_count_EAA18 / male_count_EAA18, 1)
+missing_gender_EAA18 <-
+  EAA18_row - (female_count_EAA18 + male_count_EAA18)
+
+count_gendered_CAA18 <- nrow(CAA18_gender)
+perc_gendered_CAA18 <- round(nrow(CAA18_gender) / CAA18_row, 2) * 100
+female_count_CAA18 <- 
+  length(which(CAA18_gender$gender == "female"))
+male_count_CAA18 <- 
+  length(which(CAA18_gender$gender == "male"))
+female_to_male_CAA18 <- 
+  round(female_count_CAA18 / male_count_CAA18, 1)
+missing_gender_CAA18 <-
+  CAA18_row - (female_count_CAA18 + male_count_CAA18)
+```
+
+In the SAA data we found at total of `r SAA18_row` presentations. Of these we could identify the first-named author of `r count_gendered_SAA18` (`r perc_gendered_SAA18`%) presentations as either men (n=`r male_count_SAA18`) or women (n=`r female_count_SAA18`). For the CAA meeting we have `r CAA18_row` presentations, and `r count_gendered_CAA18` (`r perc_gendered_CAA18`%) first-named authors could be classified as either men (n=`r male_count_CAA18`) or women (n=`r female_count_CAA18`). For the EAA data we have `r EAA18_row` presentations, and `r count_gendered_EAA18` (`r perc_gendered_EAA18`%) where the first author could be classified as either a man (n=`r male_count_EAA18`) or woman (n=`r female_count_EAA18`). This results in similar women-to-men ratios for the SAA (`r female_to_male_SAA18`) and EAA (`r female_to_male_EAA18`), but much lower for the CAA (`r female_to_male_CAA18`).
+
+In the SAA presentations we identified the optimum number of topics as `r SAA_stm_topic_number`, with `r SAA_stm_topic_number_significant_covary` of these showing non-random co-variance with the gender of the first-named presenter. One of the main difference that we can see between the topics of the genders are the locations that the presenters are interested in, it seems like that females are more likely to have a topic at a specific region such as mesoamerica, arizona and national parks, while males are more likely to have a topic that are in the western regions.
+
+
+For EAA we have generated a total of `r EAA_stm_topic_number` topics, with `r EAA_stm_topic_number_significant_covary` of these showing non-random co-variance with the gender of the first-named presenter. Next, let's take a look at EAA's difference between females and males. Although both red-marked topics include topics with "mediterranean", it is important to distinguish that females seems to be focusing on western mediterranean while males seems to be focusing on northern mediterranean. Another main difference that we have noticed is that males tends to have topics that are related to architect, while the topic regarding research methods using isotopes seems to be more popular for females.
+
+
+For CAA we hve generated a total of `r CAA_stm_topic_number`, with `r CAA_stm_topic_number_significant_covary` of these showing non-random co-variance with the gender of the first-named presenter.. Lastly, in CAA's stm topic plot we can see a clearer pattern from the topics marked in red. For females from CAA, we see that topics that are associated with Geographic Information System (GIS) are more likely to be a topic for female presenters. Another female-associated topics from the CAA topic plot is topics that includes the word women, excav and inform. As for males from CAA, there doesn't seem to have a specific word that is more associated with males besides the word enviorn.
+
+
+
 
 
 
