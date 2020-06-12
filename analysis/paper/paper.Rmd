@@ -46,6 +46,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Abstract
+Disproportionate representation of genders has long existed among different academic fields. Rising interest in gender equality in society, generally, has stimulated concern about how much progress has been made towards gender equality in various areas in acamdemics. Analysis of peer-reviewed publication authorship shows that archaeology and other academic fields have long been dominated by men. We ask if gender disproportionality is evident in topic differences among archaeologists participating in major conferences, such as the Society of American Archaeology (SAA), European Association of Archaeologists (EAA) and the Computer Applications and Quantitative Methods in Archaeology (CAA) meetings. Do different gender of the participants in these archaeological conferences show topic difference between them? We analysed presenters' names in the published programs of archaeology conferences to infer gender. We found that there is some association between gender and topic. Being able to note the differences between topic of choice and gender participation is important to ensure equal participation in archaeology. We expect these findings to be similar in other fields especially with increased priority of an interest in gender equality in many research communities. 
+
+
 # Introduction
 
 Gender under-representation and inequality has long existed in science, from under-representation of women and minority genders in school text books to academic publications [@hamilton2006gender; @tushingham2017peer]. Women are often under-represented for several reasons, including stereotyping that unfairly underestimates individuals' abilities, which often leads to lack of support for women in academic fields [@xu2008gender]. In this paper we explore the relationship between gender and research topics to determine if women and men tend to focus more on certain topics than others. 
@@ -54,7 +58,11 @@ We used a computational method to identify topics from the titles of presentatio
 
 # Background
 
+<<<<<<< HEAD
 When focusing on the field of archaeology, we can see that gender imbalance still occurs in archaeology and that seems to impact the kind of publications that are done in the field [@bardolph2014critical]. <!--- something about increasing numbers of womens with PhD and increasing rates of participation -->
+=======
+When focusing on the field of archaeology, we can see that gender imbalance still occurs in archaeology and that seems to impact the kind of publications that are done in the field [@bardolph2014critical]. According to American Anthropological Association's (AAA) _AnthroGuide_, there is a growing number of women participating in anthropology's graduate programs. For example, in the 2012-2013 school year, women consists of 64% of graduate students in anthropology programs and 65% of students that completed an anthropology doctoral degrees are women, whereas in 1972 32% of PhD are granted to women and 59% in 1995 [@bardolph2014critical]. 
+>>>>>>> 01058fe4859096c3c55c816a98c0c5665a7a3854
 
 @rodriguez2018gender studied gender balance among 309 authors of 299 publications produced during 1978-2016 by the Atapuerca Project, a large archaeo-palaeontological project in Burgos, Spain. They 'manually defined' the gender of each author, and found 13 articles authored exclusively by women, 34.8% of papers have women as first-authors, and overall, 35.9% of all authors are women [@rodriguez2018gender]. Over time, they observed a trend of increasing numbers of papers that include women as authors, numbers of paper lead by women as the first author, and increases in the ratio of female to male authors in group-authored papers. They did not make any observations about relationships between gender and topics.
 
