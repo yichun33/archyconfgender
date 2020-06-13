@@ -48,7 +48,7 @@ knitr::opts_chunk$set(
 
 # Abstract
 
-Disproportionate representation of genders has long existed among different academic fields. Rising interest in gender equality in society, generally, has stimulated concern about how much progress has been made towards gender equality in various areas in acamdemics. Analysis of peer-reviewed publication authorship shows that archaeology and other academic fields have long been dominated by men. We ask if gender disproportionality is evident in topic differences among archaeologists participating in major conferences, such as the Society of American Archaeology (SAA), European Association of Archaeologists (EAA) and the Computer Applications and Quantitative Methods in Archaeology (CAA) meetings. Do different gender of the participants in these archaeological conferences show topic difference between them? We analysed presenters' names in the published programs of archaeology conferences to infer gender. We found that there is some association between gender and topic. Being able to note the differences between topic of choice and gender participation is important to ensure equal participation in archaeology. We expect these findings to be similar in other fields especially with increased priority of an interest in gender equality in many research communities. 
+Disproportionate representation of genders has long existed among different academic fields. Rising interest in gender equality in society, generally, has stimulated concern about how much progress has been made towards gender equality in various areas in academics. Analysis of authorship of peer-reviewed publications shows that archaeology and other academic fields have long been dominated by men. We ask if gender disproportionality is evident in the choice of topics that researcher present on among archaeologists participating in major conferences, such as the Society of American Archaeology (SAA), European Association of Archaeologists (EAA) and the Computer Applications and Quantitative Methods in Archaeology (CAA) meetings. Does the gender of the participants in these archaeological conferences correlate with the topics of their presentations? We analysed presenters' names in the published programs of archaeology conferences to infer gender. We using machine learning to identify topics from presentation titles. We found that there is some association between gender and topics. Being aware of correlations between research topics and gender is important to ensure equitable participation in archaeology and unbiased training opportunities for students. We expect these findings to useful to instructors who prioritize gender equality in student and early career research activities.  
 
 # Introduction
 
@@ -256,6 +256,8 @@ For the CAA meeting we have `r prettyNum(CAA18_row, big.mark = ",")` presentatio
 This results in similar women-to-men ratios for the SAA (`r female_to_male_SAA18`) and EAA (`r female_to_male_EAA18`), but much lower for the CAA (`r female_to_male_CAA18`).
 
 Compare topics between the three confs
+
+how to use these results... implicit bias in assigment topics...
 
 # Conclusion
 
