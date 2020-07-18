@@ -258,7 +258,7 @@ For the CAA meeting we have `r prettyNum(CAA18_row, big.mark = ",")` presentatio
 
 # Discussion
 
-Our results show correlations between the gender of the first-named presenter and the topics in their conference presentation. Although each of the three meetings have distinctive sets of topics, we can identify some common themes in the topics that correlate with 
+Our results show significant correlations between the gender of the first-named presenter and the topics in their conference presentation in all three conferences. Although each of the three meetings have distinctive sets of topics, we can identify some common themes in the topics that correlate with gender. 
 
 Although the gender gap in academia has been shrinking in recent years, there remain substantial differences, which often result in underrepresentation of women in many fields and career stages, as well as disadvantages such as lower salaries and less access to high-prestige employment [@caprile2012meta]. Even research into these gender biases suffers a bias, with @Cislak_Formanowicz_Saguy_2018 finding that articles on gender bias and race bias are funded less often and published in journals with a lower Impact Factor than articles on comparable instances of social discrimination. 
 
