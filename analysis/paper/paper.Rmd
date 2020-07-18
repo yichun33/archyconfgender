@@ -14,7 +14,7 @@ institute:
   - UofA: University of Another Place
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
-    bookdown::html_document2:
+    bookdown::word_document2:
       fig_caption: yes
       reference_docx: "../templates/template.docx" # Insert path for the DOCX file
       pandoc_args:
@@ -111,7 +111,6 @@ A structural topic model (STM) allows us to include, alongside the typical topic
 
 # Results
 
-
 ```{r, eval=FALSE}
 
 # make the custom function available here in this Rmd file
@@ -145,6 +144,14 @@ SAA18_stm <-
 
 saveRDS(SAA18_stm, here::here("analysis/data/derived-data/SAA18_topic_model_and_plot.rds"))
 
+EAA18_stm <- 
+  stm_model_and_plot(conf_paper_titles = EAA18, 
+                     conf_gender_results = EAA18_gm, 
+                     first_name_appears_first = FALSE,
+                     max.em.its = 1000)
+
+saveRDS(EAA18_stm, here::here("analysis/data/derived-data/EAA18_topic_model_and_plot.rds"))
+
 CAA18_stm <-   
   stm_model_and_plot(conf_paper_titles = CAA18, 
                      conf_gender_results = CAA18_gm, 
@@ -153,13 +160,7 @@ CAA18_stm <-
 
 saveRDS(CAA18_stm, here::here("analysis/data/derived-data/CAA18_topic_model_and_plot.rds"))
 
-EAA18_stm <- 
-  stm_model_and_plot(conf_paper_titles = EAA18, 
-                     conf_gender_results = EAA18_gm, 
-                     first_name_appears_first = FALSE,
-                     max.em.its = 1000)
 
-saveRDS(EAA18_stm, here::here("analysis/data/derived-data/EAA18_topic_model_and_plot.rds"))
 ```
 
 
@@ -247,16 +248,20 @@ female_to_male_CAA18 <-
 missing_gender_CAA18 <-
   CAA18_row - (female_count_CAA18 + male_count_CAA18)
 ```
+Overall we see similar women-to-men ratios for the SAA (`r female_to_male_SAA18`) and EAA (`r female_to_male_EAA18`), but much lower for the CAA (`r female_to_male_CAA18`). Even before we look into the gender preferences for specific topics within each conference, we already have a hint that computational topics may be less preferred by women than by men. 
 
-In the SAA data we found a total of `r prettyNum(SAA18_row, big.mark = ",")` presentations. Of these we could identify the first-named authors of `r count_gendered_SAA18` (`r perc_gendered_SAA18`%) presentations as either men (n=`r male_count_SAA18`) or women (n=`r female_count_SAA18`). In the SAA presentations we identified the optimum number of topics as `r SAA_stm_topic_number`, with `r SAA_stm_topic_number_significant_covary` of these showing non-random co-variance with the gender of the first-named presenter. Eight of these topics were associated with men, and nine topics associated with women. One of the main difference that we can see between the topics of the genders are the locations that the presenters are interested in.  Topics associated more with women include bioarchaeology, cemeteries, burials, shells, and ceramics. Topics associated more with men include survey and landscape archaeology, geoarchaeology, rituals, and regional studies. Women are more likely to work on locations such as Mesoamerica, Arizona and national parks, while men are more likely to have a topics about the Great Lakes, and Honduras. 
+In the SAA data we found a total of `r prettyNum(SAA18_row, big.mark = ",")` presentations. Of these we could identify the first-named authors of `r count_gendered_SAA18` (`r perc_gendered_SAA18`%) presentations as either men (n=`r male_count_SAA18`) or women (n=`r female_count_SAA18`). In the SAA presentations we identified the optimum number of topics as `r SAA_stm_topic_number`, with `r SAA_stm_topic_number_significant_covary` of these showing non-random co-variance with the gender of the first-named presenter. Eight of these topics were associated with men, and nine topics associated with women. One of the main difference that we can see between the topics of the genders are the locations that the presenters are interested in.  Topics associated more with women include bioarchaeology, cemeteries, burials, shells, and ceramics. Topics associated more with men include survey and landscape archaeology, geoarchaeology, rituals, and regional studies. Women are more likely to work on locations such as Mesoamerica, Arizona and national parks, while men are more likely to present on topics about the Great Lakes, and Honduras. 
 
-For the EAA data we have `r prettyNum(EAA18_row, big.mark = ","` presentations, and `r count_gendered_EAA18` (`r perc_gendered_EAA18`%) where the first author could be classified as either a man (n=`r male_count_EAA18`) or woman (n=`r female_count_EAA18`). For EAA we generated a total of `r EAA_stm_topic_number` topics, with `r EAA_stm_topic_number_significant_covary` of these showing non-random co-variance with the gender of the first-named presenter. Seven of these topics were associated with men, and nine topics associated with women. Although topics significantly associated with men and women both include the word "Mediterranean", women seems to be focusing more on the western Mediterranean while men seems to be focusing on the northern Mediterranean. Topics associated more with women include burials, graves, museums, animals, diet, and ritual. Topics associated more with men include geoarchaeology, architecture, and towns.
+For the EAA data we have `r prettyNum(EAA18_row, big.mark = ",")` presentations, and `r count_gendered_EAA18` (`r perc_gendered_EAA18`%) where the first author could be classified as either a man (n=`r male_count_EAA18`) or woman (n=`r female_count_EAA18`). For EAA we generated a total of `r EAA_stm_topic_number` topics, with `r EAA_stm_topic_number_significant_covary` of these showing non-random co-variance with the gender of the first-named presenter. Seven of these topics were associated with men, and nine topics associated with women. Although topics significantly associated with men and women both include the word "Mediterranean", women seem to be focusing more on the western Mediterranean while men seems to be focusing on the northern Mediterranean. Topics associated more with women include burials, graves, museums, animals, diet, and ritual. Topics associated more with men include geoarchaeology, architecture, and towns.
 
 For the CAA meeting we have `r prettyNum(CAA18_row, big.mark = ",")` presentations, and `r count_gendered_CAA18` (`r perc_gendered_CAA18`%) first-named authors could be classified as either men (n=`r male_count_CAA18`) or women (n=`r female_count_CAA18`). For CAA we generated a total of `r CAA_stm_topic_number` topics, with `r CAA_stm_topic_number_significant_covary` of these showing non-random co-variance with the gender of the first-named presenter. Three of these topics were associated with men, and three topics associated with women. Topics associated more with women include archives, GIS, geophysics, collaboration, and teaching. Topics associated more with men include environmental and landscape archaeology.
 
 # Discussion
 
-This results in similar women-to-men ratios for the SAA (`r female_to_male_SAA18`) and EAA (`r female_to_male_EAA18`), but much lower for the CAA (`r female_to_male_CAA18`).
+Our results show correlations between the gender of the first-named presenter and the topics in their conference presentation. Although each of the three meetings have distinctive sets of topics, we can identify some common themes in the topics that correlate with 
+
+Although the gender gap in academia has been shrinking in recent years, there remain substantial differences, which often result in underrepresentation of women in many fields and career stages, as well as disadvantages such as lower salaries and less access to high-prestige employment [@caprile2012meta]. Even research into these gender biases suffers a bias, with @Cislak_Formanowicz_Saguy_2018 finding that articles on gender bias and race bias are funded less often and published in journals with a lower Impact Factor than articles on comparable instances of social discrimination. 
+
 
 Compare topics between the three confs
 

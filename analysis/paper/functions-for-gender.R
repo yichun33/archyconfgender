@@ -97,6 +97,7 @@ d <-
   group_by(session) %>%
   distinct(`first-named speaker`, .keep_all = TRUE )
 
+
 # compute gender of first name
 library(gender)
 library(genderdata)
@@ -118,7 +119,8 @@ d_genders <-
 d_genders_unnest <-
   d_genders %>%
   mutate(speaker_gender = transpose(first_name_gender)[['result']]) %>%
-  unnest_legacy(speaker_gender) %>%
+  mutate(speaker_gender_chr = map(speaker_gender, ~mutate_all(.x, as.character))) %>%
+  unnest_legacy(speaker_gender_chr) %>%
   select(session, gender, name)
 
 return(genders_unnest = d_genders_unnest)

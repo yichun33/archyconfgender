@@ -181,7 +181,7 @@ ggplot() +
                colour = normal_colour) +
   geom_linerange(data = highlight_tbl,
                  aes(y = order,
-                     xmin =ci_lower,
+                     xmin = ci_lower,
                      xmax = ci_upper),
                  colour = "red") +
   geom_linerange(data = highlight_tbl,
