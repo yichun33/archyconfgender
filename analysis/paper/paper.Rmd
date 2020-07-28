@@ -258,12 +258,19 @@ For the CAA meeting we have `r prettyNum(CAA18_row, big.mark = ",")` presentatio
 
 # Discussion
 
-Our results show significant correlations between the gender of the first-named presenter and the topics in their conference presentation in all three conferences. Although each of the three meetings have distinctive sets of topics, we can identify some common themes in the topics that correlate with gender. 
+Our results show significant correlations between the gender of the first-named presenter and the topics in their conference presentation in all three conferences. Although each of the three meetings have distinctive sets of topics, we can identify some common themes in the topics that correlate with gender. We found that topics strongly associated with women at all three conferences relate to managing cultural heritage, GIS, and isotope analyses. Pair-wise shared topics between conferences also reveal the norms of each community. These contrasts and similarities reveal some of the choices that presenters make when deciding where to share their work. The SAA and EAA are defined mostly by the geographic region of their community, the Americas and Europe. They have more participants, and our model identified a higher number of topics in these two, compared to CAA. CAA, with its focus on computer applications and quantitative methods, has a much smaller community, and a small number of topics. So we might expect less in common between CAA and the two bigger conferences. At both the SAA and EAA we see that topics about burials, cemeteries, bodies, and graves are strongly associated with women. For the SAA and CAA the shared women-associated topics include learning and practice. For the EAA & CAA the common topics associated with women presenters are self-referential: women and gender. The absence of bioarchaeology and topics about human remains at CAA suggest that either archaeologists working on those topics do not recognise this conference as a meaningful place to present that work, or that there are some unrealised opportunities to apply computational and quantitative methods in bioarchaeological research. 
+
+Topics that are strongly associated with men at all three conferences include geoarchaeology and geophysics. Topics associated with men at the SAA and CAA include built-location-based research, indicated by keywords such as house/town/site/fort. At both SAA and CAA we see landscape as a shared topic that is strongly associated with men. For the EAA and CAA there is little overlap in topics strongly associated with men. The geophysics topic is notable here because it is also in the CAA topic that is most strongly associated with women. It is strongly associated with men at the SAA and EAA, but also strongly associated with women at the CAA. This indicates that a topic is not immutably bound to either men or women, but that topics can shift in prominence among genders, depending on the context. This is important for understanding the relationship between genders, topics, and communities. These relationships are flexible and contingent, such that a topic-gender association is specific to a particular community (e.g. conference), and argues against topic-gender generalisations that attempt to transcend communities of practice. 
+
+ideas vs things vs places
+
+
+
+
+
 
 Although the gender gap in academia has been shrinking in recent years, there remain substantial differences, which often result in underrepresentation of women in many fields and career stages, as well as disadvantages such as lower salaries and less access to high-prestige employment [@caprile2012meta]. Even research into these gender biases suffers a bias, with @Cislak_Formanowicz_Saguy_2018 finding that articles on gender bias and race bias are funded less often and published in journals with a lower Impact Factor than articles on comparable instances of social discrimination. 
 
-
-Compare topics between the three confs
 
 how to use these results... implicit bias in assigment topics...
 
