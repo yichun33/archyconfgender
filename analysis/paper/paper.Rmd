@@ -262,6 +262,8 @@ Our results show significant correlations between the gender of the first-named 
 
 Topics that are strongly associated with men at all three conferences include geoarchaeology and geophysics. Topics associated with men at the SAA and CAA include built-location-based research, indicated by keywords such as house/town/site/fort. At both SAA and CAA we see landscape as a shared topic that is strongly associated with men. For the EAA and CAA there is little overlap in topics strongly associated with men. The geophysics topic is notable here because it is also in the CAA topic that is most strongly associated with women. It is strongly associated with men at the SAA and EAA, but also strongly associated with women at the CAA. This indicates that a topic is not immutably bound to either men or women, but that topics can shift in prominence among genders, depending on the context. This is important for understanding the relationship between genders, topics, and communities. These relationships are flexible and contingent, such that a topic-gender association is specific to a particular community (e.g. conference), and argues against topic-gender generalisations that attempt to transcend communities of practice. 
 
+Talk about Thelwall... say that these gender differences exist, but 
+
 ideas vs things vs places
 
 
