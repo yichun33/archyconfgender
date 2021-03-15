@@ -91,8 +91,6 @@ CAA18_row <- nrow(CAA18)
 
 library(gender)
 lynne_gender <-  gender("Lynne")
-
-
 ```
 
 # Methods
@@ -132,9 +130,14 @@ saveRDS(CAA18_gm, here::here("analysis/data/derived-data/CAA18_gender_model.rds"
 # make the custom function available here in this Rmd file
 source(here::here("analysis/paper/function-for-structural-topic-model.R"))
 
-SAA18_gm <- readr::read_rds(here::here("analysis/data/derived-data/SAA18_gender_model.rds")) 
-EAA18_gm <- readr::read_rds(here::here("analysis/data/derived-data/EAA18_gender_model.rds"))
-CAA18_gm <- readr::read_rds(here::here("analysis/data/derived-data/CAA18_gender_model.rds"))
+SAA18_gm <- 
+  readr::read_rds(here::here("analysis/data/derived-data/SAA18_gender_model.rds")) 
+
+EAA18_gm <- 
+  readr::read_rds(here::here("analysis/data/derived-data/EAA18_gender_model.rds"))
+
+CAA18_gm <- 
+  readr::read_rds(here::here("analysis/data/derived-data/CAA18_gender_model.rds"))
 
 # compute and save the topic model for each conf, takes quite a long time
 SAA18_stm <- 
@@ -159,7 +162,6 @@ CAA18_stm <-
                      max.em.its = 1000)
 
 saveRDS(CAA18_stm, here::here("analysis/data/derived-data/CAA18_topic_model_and_plot.rds"))
-
 
 ```
 
@@ -238,16 +240,51 @@ missing_gender_EAA18 <-
   EAA18_row - (female_count_EAA18 + male_count_EAA18)
 
 count_gendered_CAA18 <- nrow(CAA18_gender)
+
 perc_gendered_CAA18 <- round(nrow(CAA18_gender) / CAA18_row, 2) * 100
+
 female_count_CAA18 <- 
   length(which(CAA18_gender$gender == "female"))
+
 male_count_CAA18 <- 
   length(which(CAA18_gender$gender == "male"))
+
 female_to_male_CAA18 <- 
   round(female_count_CAA18 / male_count_CAA18, 1)
+
 missing_gender_CAA18 <-
   CAA18_row - (female_count_CAA18 + male_count_CAA18)
 ```
+
+```{r}
+# some basic visualisations to show the data
+list_confs <- 
+  list(SAA18_gender %>% 
+              mutate(session = as.character(session)),
+       CAA18_gender,
+       EAA18_gender %>% 
+              mutate(session = as.character(session))
+       )
+
+names(list_confs) <- c("SAA", "CAA", "EAA")
+
+all_conf_tbl <- 
+  bind_rows(list_confs,
+            .id = "conf")
+
+# how many papers per conf?
+ggplot(all_conf_tbl) +
+  aes(conf,
+      fill = gender) +
+  geom_bar(position = "dodge") +
+  theme_minimal(base_size = 16) +
+  theme(legend.position = c(.2,.60)) +
+  labs(x = "", 
+       y = "number of papers presented in 2018")
+```
+
+
+
 Overall we see similar women-to-men ratios for the SAA (`r female_to_male_SAA18`) and EAA (`r female_to_male_EAA18`), but much lower for the CAA (`r female_to_male_CAA18`). Even before we look into the gender preferences for specific topics within each conference, we already have a hint that computational topics may be less preferred by women than by men. 
 
 In the SAA data we found a total of `r prettyNum(SAA18_row, big.mark = ",")` presentations. Of these we could identify the first-named authors of `r count_gendered_SAA18` (`r perc_gendered_SAA18`%) presentations as either men (n=`r male_count_SAA18`) or women (n=`r female_count_SAA18`). In the SAA presentations we identified the optimum number of topics as `r SAA_stm_topic_number`, with `r SAA_stm_topic_number_significant_covary` of these showing non-random co-variance with the gender of the first-named presenter. Eight of these topics were associated with men, and nine topics associated with women. One of the main difference that we can see between the topics of the genders are the locations that the presenters are interested in.  Topics associated more with women include bioarchaeology, cemeteries, burials, shells, and ceramics. Topics associated more with men include survey and landscape archaeology, geoarchaeology, rituals, and regional studies. Women are more likely to work on locations such as Mesoamerica, Arizona and national parks, while men are more likely to present on topics about the Great Lakes, and Honduras. 
@@ -266,23 +303,18 @@ Related work on gender differences in research topics has noted major difference
 
 @ostapenko2018textual identified common topics in the personal statements of aspiring surgeons that were specific to men and women authors. Women tended to discuss surgery as working as a team, while men focused on their specific individual clinical experiences. @ostapenko2018textual propose that the differences between male and female statements may come from actual motivating factors for career goals and aspirations, or they may reflect differences in beliefs about what makes a successful personal statement. They could not evaluate which explanation was most important, but a key observation is that authors of the personal statements may not deliberately choose the themes for their statements. Instead, they may be using themes that they have received positive feedback on on the past, that has perhaps unconsciously biased them towards certain themes in their writing. Similarly archaeologists might choose topics for their research based on a pattern of positive or negative feedback on topic choices over time, and so their choices are not fully deliberate.  
 
-
 Theories such as people-thing and Thewall et al's exploratory/abstraction assume that researchers freely make choices about their research preferences, and that these choices are influenced by inborn cognitive differences. However, these approaches do not fully explain gender differences in topic choices. A meta-analysis of gender and science research by the European Commission [@caprile2012meta] found that structural and life-course factors also profoundly shape the distribution of genders in research fields. Socialisation factors, such as media representation of scientists and family role models strongly shape career choices. Life-course factors include the 'rush hour' which is the time when family and academic demands collide and pivotal decisions are made about having children and establishing an academic career. Historically this is a time that leads to women making different choices to their male peers, but this can also affect caregivers of any gender. For example, caregivers may be less mobile to conduct field research or relocate for career advancement. These structural and life-course factors may add up to subtle, but pervasive exclusionary practices the skew gender representation in research fields that are independent of individual choices and preferences.    
 
+A key limitation of this study is our concept of gender, and how we measure it. Like many social science studies, we have measured gender assuming it has two binary categories. However, we recognise that many cultures have long included more than two genders [@wilson1996we; @graham2004s], and there is a growing awareness of this in Western cultures also. A better measure of gender would represent it as a multifaceted spectrum [@tobin2010intrapsychics]. The problem with our binary measure is that it does not reflect our current understanding of gender, forces people in misclassified categories, and is hostile to public acceptance and advocacy for transgender and nonbinary individuals. Our instrument for collecting gender data only returns two categories, so this has limited potential for overcoming this limitation. Instead, we recommend that conference organisers collect gender information directly from presenters using inclusive gender measures. For example, by providing nonbinary options for presenters on registration forms, and by asking about gender as an open‐ended question for participants to self-identify. We recommend that future work on gender in archaeology avoid 'othering' language when describing results. For example, reporting a sample as '150 participants (48% women; 49% men; 3% other)' violates ethical standards because such wording implies that binary gender is normal or appropriate, whereas trans and nonbinary gender is not (it is 'other'). Our hope is that our study might be the last one to  discuss gender as a binary. 
 
-
-
-
-
-
-
+# Conclusion
 
 Although the gender gap in academia has been shrinking in recent years, there remain substantial differences, which often result in underrepresentation of women in many fields and career stages, as well as disadvantages such as lower salaries and less access to high-prestige employment [@caprile2012meta]. Even research into these gender biases suffers a bias, with @Cislak_Formanowicz_Saguy_2018 finding that articles on gender bias and race bias are funded less often and published in journals with a lower Impact Factor than articles on comparable instances of social discrimination. 
 
 
 how to use these results... implicit bias in assigment topics...
 
-# Conclusion
+
 
 # Acknowledgements
 
