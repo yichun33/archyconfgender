@@ -108,7 +108,7 @@ The entire R code [@Rlanguage2019] used for all the analysis and visualizations 
 
 # Results
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 
 # make the custom function available here in this Rmd file
 source(here::here("analysis/paper/functions-for-gender.R"))
@@ -124,7 +124,7 @@ CAA18_gm <- get_the_gender_data(CAA18)
 saveRDS(CAA18_gm, here::here("analysis/data/derived-data/CAA18_gender_model.rds"))
 ```
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 
 # make the custom function available here in this Rmd file
 source(here::here("analysis/paper/function-for-structural-topic-model.R"))
@@ -249,8 +249,8 @@ ggplot(all_conf_tbl) +
 
 ```{r saa-stm-plot}
 #| fig.cap = "Point estimates and 95% confidence intervals for the estimated 
-#| marginal effect of gender on each topic identified in titles of presentations at
-#| 2018 SAA meeting"
+#| marginal effect of gender on each topic identified in titles of presentations at 
+#|  the 2018 SAA meeting"
 
 # get plots
 library(tidyverse)
@@ -274,8 +274,8 @@ In the SAA data we found a total of `r prettyNum(SAA18_row, big.mark = ",")` pre
 
 ```{r eaa-stm-plot}
 #| fig.cap = "Point estimates and 95% confidence intervals for the estimated 
-#| marginal effect of gender on each topic identified in titles of presentations at
-#| 2018 EAA meeting"
+#| marginal effect of gender on each topic identified in titles of presentations at 
+#|  the 2018 EAA meeting"
 
 # EAA -----
 EAA18_stm_plot <- 
@@ -294,8 +294,8 @@ For the EAA data we have `r prettyNum(EAA18_row, big.mark = ",")` presentations,
 
 ```{r caa-stm-plot}
 #| fig.cap = "Point estimates and 95% confidence intervals for the estimated 
-#| marginal effect of gender on each topic identified in titles of presentations at
-#| 2018 CAA meeting"
+#| marginal effect of gender on each topic identified in titles of presentations at 
+#|  the 2018 CAA meeting"
 
 # CAA -----
 CAA18_stm_plot <- 
@@ -310,7 +310,7 @@ CAA_stm_topic_number_significant_covary <-
   nrow(ggplot2::layer_data(CAA18_stm_plot$plot, 3))
 ```
 
-For the CAA meeting we have `r prettyNum(CAA18_row, big.mark = ",")` presentations, and `r count_gendered_CAA18` (`r perc_gendered_CAA18`%) first-named authors could be classified as either men (n=`r male_count_CAA18`) or women (n=`r female_count_CAA18`). For CAA we generated a total of `r CAA_stm_topic_number` topics, with `r CAA_stm_topic_number_significant_covary` of these showing non-random co-variance with the gender of the first-named presenter (Figure \@ref(fig:eaa-stm-plot)). Three of these topics were associated with men, and three topics associated with women. Topics associated more with women include archives, GIS, geophysics, collaboration, and teaching. Topics associated more with men include environmental and landscape archaeology.
+For the CAA meeting we have `r prettyNum(CAA18_row, big.mark = ",")` presentations, and `r count_gendered_CAA18` (`r perc_gendered_CAA18`%) first-named authors could be classified as either men (n=`r male_count_CAA18`) or women (n=`r female_count_CAA18`). For CAA we generated a total of `r CAA_stm_topic_number` topics, with `r CAA_stm_topic_number_significant_covary` of these showing non-random co-variance with the gender of the first-named presenter (Figure \@ref(fig:caa-stm-plot)). Three of these topics were associated with men, and three topics associated with women. Topics associated more with women include archives, GIS, geophysics, collaboration, and teaching. Topics associated more with men include environmental and landscape archaeology.
 
 # Discussion
 
