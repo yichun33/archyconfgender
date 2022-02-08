@@ -210,7 +210,7 @@ ggplot() +
                 label = labels),
             size = highlight_size,
             colour = "red") +
-  xlab("        ← more men  ...  more women →") +
+  xlab("    ← more men  -  more women →") +
   ylab("Topic")
 
 # unlink(here::here("analysis/data/derived-data/the_model.rds"))
