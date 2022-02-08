@@ -839,10 +839,13 @@
     },
     "highr": {
       "Package": "highr",
-      "Version": "0.9",
+      "Version": "0.9.1",
       "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "8eb36c8125038e648e5d111c0d7b2ed4",
+      "Repository": "https://yihui.r-universe.dev",
+      "RemoteUrl": "https://github.com/yihui/highr",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "bb7bf6b356d4918e3b8da7372d7921ce9b761109",
+      "Hash": "322fcf4e920691cc2c2854e6c493f12a",
       "Requirements": [
         "xfun"
       ]
@@ -1093,10 +1096,13 @@
     },
     "mime": {
       "Package": "mime",
-      "Version": "0.12",
+      "Version": "0.12.1",
       "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "18e9c28c1d3ca1560ce30658b22ce104",
+      "Repository": "https://yihui.r-universe.dev",
+      "RemoteUrl": "https://github.com/yihui/mime",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "8773e2b13cf03e3e8a00df774c9a5d7cb3a4de21",
+      "Hash": "eb5bac491f3f9b950cd9af9c2bcd97d4",
       "Requirements": []
     },
     "modelr": {
@@ -1762,15 +1768,15 @@
     },
     "tinytex": {
       "Package": "tinytex",
-      "Version": "0.36.1",
+      "Version": "0.36.2",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "tinytex",
       "RemoteUsername": "yihui",
+      "RemoteRepo": "tinytex",
       "RemoteRef": "HEAD",
-      "RemoteSha": "19c56dcd5149923bece847df12077c8b0db06894",
-      "Hash": "1cbb3bdaabfa8d5452d086fc2247b723",
+      "RemoteSha": "4403af9612935ec1c423112fad8394e477760bbe",
+      "RemoteHost": "api.github.com",
+      "Hash": "02c2289ef4f2df2d280ca4e2b7ef6a4c",
       "Requirements": [
         "xfun"
       ]
@@ -1918,10 +1924,13 @@
     },
     "xfun": {
       "Package": "xfun",
-      "Version": "0.29",
+      "Version": "0.29.1",
       "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "e2e5fb1a74fbb68b27d6efc5372635dc",
+      "Repository": "https://yihui.r-universe.dev",
+      "RemoteUrl": "https://github.com/yihui/xfun",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "e0258718870106e2ba206dd96ef1dea3aa15a600",
+      "Hash": "bb03c188e9c855afebdb844541581d12",
       "Requirements": []
     },
     "xml2": {
