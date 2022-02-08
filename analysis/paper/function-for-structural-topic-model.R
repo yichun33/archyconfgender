@@ -13,6 +13,10 @@ stm_plot <- function(conf_paper_titles,
   library(readxl)
   library(quanteda)
   library(stm)
+  library(tm)
+  library(Rtsne)
+  library(geometry)
+  library(rsvd)
   library(dplyr)
 
   x <- conf_paper_titles

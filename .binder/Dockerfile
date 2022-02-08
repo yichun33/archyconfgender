@@ -1,12 +1,11 @@
-FROM rocker/binder:3.6.0
+FROM rocker/binder:4.1.2
 LABEL maintainer='Ben Marwick'
 USER root
 COPY . ${HOME}
 RUN chown -R ${NB_USER} ${HOME}
 USER ${NB_USER}
 
-
-
-RUN wget https://github.com/yichun33/archyconfgender/raw/master/DESCRIPTION && R -e "options(repos = list(CRAN = 'http://mran.revolutionanalytics.com/snapshot/2020-03-23/')); devtools::install_deps()"
+# using renv to install the pkgs our project uses
+RUN R -e "renv::restore(repos = c(CRAN='https://packagemanager.rstudio.com/all/__linux__/bionic/298'))"
 
 RUN rm DESCRIPTION.1; exit 0
