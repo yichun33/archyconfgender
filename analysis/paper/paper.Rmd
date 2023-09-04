@@ -35,8 +35,9 @@ knitr::opts_chunk$set(
   echo = FALSE,
   comment = "#>",
   fig.path = "../figures/",
-  dpi = 300
+  dpi = 600
 )
+
 ```
 
 # Abstract
@@ -245,12 +246,24 @@ ggplot(all_conf_tbl) +
   theme(legend.position = c(.2,.60)) +
   labs(x = "", 
        y = "number of papers presented in 2018")
+
+ggplot2::ggsave(here::here("analysis/figures/fig_1_basic_info_papers_per_conf.tiff"), 
+       height = 4, 
+       width = 6,
+       dpi = 600,
+       bg = "white")
 ```
 
 ```{r saa-stm-plot}
 #| fig.cap = "Point estimates and 95% confidence intervals for the estimated 
 #| marginal effect of gender on each topic identified in titles of presentations at 
 #|  the 2018 SAA meeting"
+
+# https://www.tandfonline.com/action/authorSubmission?show=instructions&journalCode=yjfa20
+he = 4.5
+wi = 7
+dpi = 800
+plot_file_format <-  "tiff"
 
 # get plots
 library(tidyverse)
@@ -260,9 +273,11 @@ SAA18_stm_plot <-
   readr::read_rds(here::here("analysis/data/derived-data/SAA18_topic_model_and_plot.rds"))
 
 SAA18_stm_plot$plot
-ggplot2::ggsave(here::here("analysis/figures/SAA18_stm_plot.png"), 
-       height = 7, 
-       width = 6)
+ggplot2::ggsave(here::here(paste0("analysis/figures/fig_2_SAA18_stm_plot.",
+                                  plot_file_format)), 
+       height = he, 
+       width = wi,
+       dpi = dpi)
 
 SAA_stm_topic_number <-
   SAA18_stm_plot$model$settings$dim$K
@@ -282,7 +297,11 @@ EAA18_stm_plot <-
   readr::read_rds(here::here("analysis/data/derived-data/EAA18_topic_model_and_plot.rds"))
 
 EAA18_stm_plot$plot
-ggsave(here::here("analysis/figures/EAA18_stm_plot.png"), height = 7, width = 6)
+ggsave(here::here(paste0("analysis/figures/fig_3_EAA18_stm_plot.", 
+                  plot_file_format)),
+       height = he, 
+       width = wi,
+       dpi = dpi)
 
 EAA_stm_topic_number <-
   EAA18_stm_plot$model$settings$dim$K
@@ -301,8 +320,19 @@ For the EAA data we have `r prettyNum(EAA18_row, big.mark = ",")` presentations,
 CAA18_stm_plot <- 
   readr::read_rds(here::here("analysis/data/derived-data/CAA18_topic_model_and_plot.rds"))
 
-CAA18_stm_plot$plot
-ggsave(here::here("analysis/figures/CAA18_stm_plot.png"), height = 7, width = 6)
+# CAA18_stm_plot$plot
+# dissemble the plot to remove the tofu text
+q <- ggplot_build(CAA18_stm_plot$plot)
+q$data[[7]]$label[14] <- str_remove_all(q$data[[7]]$label[14], "���,")
+# reassemble the plot
+p <- ggplot_gtable(q)
+# show the plot
+plot(p)
+ggsave(here::here(paste0("analysis/figures/fig_4_CAA18_stm_plot.", 
+                         plot_file_format)),
+       height = he, 
+       width = wi,
+       dpi = dpi)
 
 CAA_stm_topic_number <-
   CAA18_stm_plot$model$settings$dim$K
